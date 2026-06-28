@@ -1,0 +1,79 @@
+<?php
+namespace Src\Traits;
+
+
+use RuntimeException;
+use Src\Sql;
+use Src\Core\CacheManager;
+use Src\Db\Db;
+use Src\Db\MySQL;
+use Src\Db\Postgres;
+use Src\Db\Sqlite;
+
+
+trait DbTrait{
+    protected string $driver = "mysql";
+    protected const DRIVER   = [
+        "mysql",
+        "sqlite",
+        "pgsql",
+    ];
+
+      /**
+     * Summary of db
+     * @var Db
+     */
+    private ?Db $db = null;
+
+    private string $cacheDir = "sql";
+
+
+     /**
+     * Summary of driver
+     * @param string $driver
+     * @param string $database
+     * @return Sql
+     */
+    public function driver(string $driver, string $database = ""): Sql
+    {
+        $clone         = clone $this;
+        $clone->driver = $driver;
+
+        if (! \in_array($driver, self::DRIVER)) {
+            throw new RuntimeException("error your driver {$driver} is not supported ! ");
+        }
+
+        $clone->driver = strtolower($clone->driver);
+
+        if ($clone->driver === "mysql") {
+            $clone->db = new MySQL($database);
+            return $clone;
+
+        } else if ($clone->driver === "sqlite") {
+
+            $clone->db = new Sqlite($database);
+            return $clone;
+        } else if ($clone->driver === "pgsql") {
+            $clone->db = new Postgres($database);
+        }
+
+        return $clone;
+    }
+
+    /**
+     * Summary of db
+     * @return Db|null
+     */
+    private function db(): ?Db
+    {
+        if ($this->db === null) {
+            $this->db = new MySQL();
+        }
+        return $this->db;
+    }
+
+
+     private function cache(string $key):CacheManager{
+        return CacheManager::key($key)->dir($this->cacheDir);
+    }
+}

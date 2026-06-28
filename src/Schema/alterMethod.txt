@@ -1,0 +1,73 @@
+1️⃣ Colonnes
+Opération	Syntaxe / Exemple	Description
+Ajouter une colonne	`ALTER TABLE table ADD COLUMN nom TYPE [NULL	NOT NULL] [DEFAULT ...] [COMMENT '...'];`
+Modifier une colonne	`ALTER TABLE table MODIFY COLUMN nom TYPE [NULL	NOT NULL] [COMMENT '...'];`
+Renommer une colonne	`ALTER TABLE table CHANGE COLUMN ancien_nom nouveau_nom TYPE [NULL	NOT NULL];`
+Supprimer une colonne	ALTER TABLE table DROP COLUMN nom;	Supprime la colonne et ses index/FK associés
+Ajouter ou modifier la valeur par défaut	ALTER TABLE table ALTER COLUMN nom SET DEFAULT valeur;	Change la valeur par défaut
+Supprimer la valeur par défaut	ALTER TABLE table ALTER COLUMN nom DROP DEFAULT;	Supprime la valeur par défaut
+2️⃣ Clés primaires et index
+Opération	Syntaxe / Exemple	Description
+Ajouter une clé primaire	ALTER TABLE table ADD PRIMARY KEY (colonne1, colonne2, ...);	Déclare une PK
+Supprimer la clé primaire	ALTER TABLE table DROP PRIMARY KEY;	Supprime la PK
+Ajouter un index	ALTER TABLE table ADD INDEX nom_index (colonne1, colonne2,...);	Index non unique pour performance
+Ajouter un index unique	ALTER TABLE table ADD UNIQUE nom_index (colonne);	Index unique
+Supprimer un index	ALTER TABLE table DROP INDEX nom_index;	Supprime un index
+Ajouter un index FULLTEXT	ALTER TABLE table ADD FULLTEXT nom_index (colonne);	Recherche texte complet
+Ajouter un index SPATIAL	ALTER TABLE table ADD SPATIAL nom_index (colonne);	Index géospatial
+3️⃣ Clés étrangères
+Opération	Syntaxe / Exemple	Description
+Ajouter une FK	ALTER TABLE table ADD CONSTRAINT nom_fk FOREIGN KEY (colonne) REFERENCES table_ref(col_ref) ON DELETE ... ON UPDATE ...;	Crée une FK
+Supprimer une FK	ALTER TABLE table DROP FOREIGN KEY nom_fk;	Supprime une FK
+Activer/Désactiver FK	SET FOREIGN_KEY_CHECKS = 0; / 1;	Pour modifier des colonnes impliquées dans des FK
+4️⃣ Table globale
+Opération	Syntaxe / Exemple	Description
+Changer le moteur	ALTER TABLE table ENGINE = InnoDB;	Change le moteur de stockage
+Changer charset/collate	ALTER TABLE table CHARSET = utf8mb4, COLLATE = utf8mb4_general_ci;	Modifier encodage et interclassement
+Renommer la table	ALTER TABLE ancien_nom RENAME TO nouveau_nom;	Renommer une table
+Ajouter un commentaire de table	ALTER TABLE table COMMENT = 'texte';	Ajouter ou modifier un commentaire de table
+5️⃣ Ordre des colonnes
+Opération	Syntaxe / Exemple	Description
+Déplacer une colonne	ALTER TABLE table MODIFY COLUMN nom TYPE [AFTER autre_colonne];	Place la colonne à un autre endroit
+Déplacer en première position	ALTER TABLE table MODIFY COLUMN nom TYPE FIRST;	Met la colonne en premier
+
+💡 Résumé pratique :
+ALTER TABLE te permet quasiment tout ce que tu ferais avec CREATE TABLE, mais sur une table existante et sans perdre les données.
+
+Si tu veux, je peux te faire une version “méthodes Noga” pour ALTER TABLE, pour que tu puisses faire ces opérations en PHP fluide et immuable, comme ton builder de création de table.
+
+Veux‑tu que je fasse ça ?
+
+// public function addCache() {
+//     $sql = $this->compiler();
+//     // Ton nettoyage de regex
+//     $cleanSql = preg_replace('/:(wh|whOr|whin|whbt|LIKE|whbt|HAV)_(\w+)_(\w+)/','',$sql);
+//     $content = [];
+//     $existingContent = [];
+//     $intent = md5($this->table .$cleanSql);
+//     $cachePath = __DIR__ . "/cache/sql_cache.php";
+
+//     $content[$intent] = [
+//     'sql'    => $sql,
+//     'params' => $this->params
+// ];
+
+//     if(file_exists($cachePath)){
+
+//     $existingContent = include $cachePath;
+
+//     if(isset($existingContent[$intent]) &&
+//      array_key_exists($intent, $existingContent)
+//      ){
+//         return [$existingContent[$intent]['params'],$existingContent[$intent]['sql']];
+// }else{
+//     $content = array_merge($existingContent,$content);
+//     file_put_contents($cachePath,
+//     "<?php return ".var_export($content,true).";");
+// }
+
+// }
+
+//  return [$this->params,$this->compiler()];
+
+// }

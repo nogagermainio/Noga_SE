@@ -1,0 +1,1 @@
+{"version":2,"defects":{"Test\\NogaTest::testRecursiveCTE":7},"times":{"Test\\NogaTest::testBasicSelect":0.012,"Test\\NogaTest::testWhereClause":0.002,"Test\\NogaTest::testGroupByAndSum":0.003,"Test\\NogaTest::testRecursiveCTE":0.011,"Test\\NogaTest::testIsNullMethod":0.002,"Test\\NogaTest::testInnerJoin":0.008}}

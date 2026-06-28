@@ -1,0 +1,18 @@
+<?php
+require "vendor/autoload.php";
+
+use Src\CLI\Command\Command;
+use Src\Core\NgManager;
+use Src\CLI\kernel;
+
+
+NgManager::getInstance("ENV/ngconfig.ng");
+
+if(PHP_SAPI === 'cli'){
+    Command::get(["src","test"]);
+
+kernel::run($argv);
+exit(0);
+
+}
+
