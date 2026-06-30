@@ -32,9 +32,9 @@ trait DbTrait{
      * Summary of driver
      * @param string $driver
      * @param string $database
-     * @return Sql
+     * @return static
      */
-    public function driver(string $driver, string $database = ""): Sql
+    public function driver(string $driver, string $database = ""):static
     {
         $clone         = clone $this;
         $clone->driver = $driver;

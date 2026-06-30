@@ -77,7 +77,7 @@ abstract class Db{
      * @throws RuntimeException
      * @return bool|\PDOStatement
      */
-    public function fais(string $sql,array $params = []){
+    public function execute(string $sql,array $params = []){
        try{
 
         $stmt = $this->connect()->prepare($sql);
@@ -103,7 +103,7 @@ abstract class Db{
      * @param int $fetchMode
      */
     public function One(string $sql,array $params = [],int $fetchMode = PDO::FETCH_OBJ){
-        $stmt = $this->fais($sql,$params);
+        $stmt = $this->execute($sql,$params);
         return $stmt->fetch($fetchMode);
     }
 
@@ -123,7 +123,7 @@ abstract class Db{
      */
    public function All(string $sql, array $params = [],int $fetchMode = PDO::FETCH_OBJ) {
 
-    $stmt = $this->fais($sql, $params);
+    $stmt = $this->execute($sql, $params);
 
     return $stmt->fetchAll($fetchMode);
 }
@@ -139,7 +139,7 @@ abstract class Db{
  * @return \Generator
  */
 public function stream(string $sql, array $params = [],int $fetchMode = PDO::FETCH_OBJ){
-     $stmt = $this->fais($sql, $params);
+     $stmt = $this->execute($sql, $params);
        while ($row = $stmt->fetch($fetchMode)) {
         yield $row;
     }

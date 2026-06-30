@@ -3,7 +3,7 @@ namespace Src\Facade;
 use BadMethodCallException;
 use LogicException;
 
-abstract class Design{
+abstract class Facade{
 
     protected static array $instance = [];
 
@@ -11,17 +11,20 @@ abstract class Design{
    protected static function getProcessInstance()
 {
     $insta = new static();
-    $class = $insta->getProcessClass();
-
+    foreach($insta->getProcessClass() as $process){
+        $class = $process;
+        
     if (!isset(self::$instance[$class])) {
         self::$instance[$class] = new $class();
     }
 
+    }
+  
+
     return self::$instance[$class];
 }
 
-
-    protected function getProcessClass(): string{
+    protected function getProcessClass(): array{
         throw new LogicException("Error : Process class is not definied ! ");
     } 
 

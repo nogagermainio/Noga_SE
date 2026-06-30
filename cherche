@@ -110,3 +110,24 @@ une capture de ton framework PHP ;
 le lien GitHub.
 
 Cela raconte immédiatement ce que tu sais faire.
+
+
+1. ✅ AJOUTE DOCUMENTATION
+   - README professionnels avec SCREENSHOTS
+   - Installation guide
+   - 5+ exemples concrets
+   - API documentation
+
+2. ✅ AJOUTE TESTS
+   - 30+ unit tests par repo
+   - GitHub Actions CI (run tests auto)
+   - Coverage badge (aim 80%+)
+
+3. ✅ ADD MULTIPLE COMMITS
+   - Rewrite git history: atomic commits
+   - Clear commit messages
+   - Show progression over time
+
+4. ✅ ADD TOPICS/TAGS
+   - Topics: php, query-builder, framework
+   - Badges: Build | Tests | Coverage

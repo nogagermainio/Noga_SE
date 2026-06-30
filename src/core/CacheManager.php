@@ -9,19 +9,17 @@ use Throwable;
 
 class CacheManager
 {
-
     protected string|array $key;
     protected mixed $data      = null;
     private ?string $signature = null;
     private string $path;
     private ?string $debug = null;
     private ?int $delay    = null;
-    private ?string $type = null; 
-    private array $typeValide = ["array","json"];
+    private string $basePath = __DIR__ . "/../../src/cache";
 
     public function __construct(string | array $key = "")
     {
-        $this->path      = __DIR__ . "/../../storages/cache";
+        $this->path      = $this->basePath;
         $this->key       = $key;
         $this->data      = null;
         $this->debug     = "";
@@ -34,25 +32,12 @@ class CacheManager
         }
     }
 
-    public static function key(string | array $key): CacheManager
-    {
-        return new static($key);
-    }
-
-    public function type(string $type):CacheManager{
-        $clone = clone $this;
-        $types = \in_array($type,$clone->typeValide) ? $type : null;
-        $clone->type = $types;
-
-        return $clone;
-    }
-
     public function dir(string $dir): CacheManager
     {
         $clone = clone $this;
 
         $dir         = trim($dir, "/");
-        $clone->path = __DIR__ . "/../../storages/cache/" . $dir;
+        $clone->path = "{$clone->basePath}/{$dir}";
 
            if (
         ! is_dir($clone->path) &&
@@ -73,8 +58,7 @@ class CacheManager
 
     public function getPath(): string
     {
-        $type = ($this->type === "json") ? ".json" : ".php"; 
-        return "{$this->path}" . \DIRECTORY_SEPARATOR  . $this->buildKey() . $type;
+        return "{$this->path}" . \DIRECTORY_SEPARATOR  . $this->buildKey() . ".php";
     }
 
     public function has(): bool
@@ -82,7 +66,10 @@ class CacheManager
         return file_exists($this->getPath());
     }
 
-
+    public static function key(string | array $key): CacheManager
+    {
+        return new static($key);
+    }
 
     public function data(mixed $data): CacheManager
     {
@@ -90,23 +77,6 @@ class CacheManager
         $clone->data = $data;
 
         return $clone;
-    }
-
-    private function exprectedData():?string{
-
-       if(!\in_array($this->type,$this->typeValide)){
-            $data = "Erreur {$this->type} is not supported !";
-        } 
-                
-        // json encode data
-        $jsonEncode = json_encode($this->mergeData(),\JSON_PRETTY_PRINT);
-        // array php data
-        $arrayPhp = "<?php" . PHP_EOL
-        . "return " . var_export($this->mergeData(), true) . ";";
-
-        $data = ($this->type === 'json') ? $jsonEncode : $arrayPhp;
-
-        return $data;
     }
 
     public function put(): CacheManager
@@ -117,10 +87,12 @@ class CacheManager
             throw new RuntimeException("no data found");
         }
 
-        $tmp = $clone->getPath() .
+        $tmp = $clone->path . DIRECTORY_SEPARATOR .
         bin2hex(random_bytes(16)) . '.tmp';
 
-        $content = $clone->exprectedData();
+        $content = "<?php" . PHP_EOL
+        . "return " . var_export($clone->mergeData(), true) . ";";
+
         if (file_put_contents($tmp, $content, LOCK_EX) === false) {
             throw new RuntimeException("tmp write failed");
         }
@@ -132,6 +104,7 @@ class CacheManager
         $clone->debug =
         "the cache has been created\n"
         . "cache key : " . (is_array($clone->key) ? implode(',', $clone->key) : $clone->key) . "\n"
+        . "cache fileName : " . $clone->buildKey() . ".php\n"
         . "path : " . $clone->getPath() . "\n"
         . "content : " . json_encode($clone->mergeData(), JSON_PRETTY_PRINT);
 
@@ -159,10 +132,10 @@ class CacheManager
 
     }
 
-    public function getData()
+    public function getData(): array
     {
         $data = $this->get();
-        return $data;
+        return isset($data['data']) ? $data['data'] : [];
     }
 
     public function getSignature(): string
@@ -173,11 +146,12 @@ class CacheManager
 
     public static function getAll(string $dir): Generator
     {
+        $instance = new static();
         $dir = trim($dir, "/");
 
         $path = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator(
-                __DIR__ . "/../../storages/cache/" . $dir,
+                $instance->basePath . $dir,
                 \FilesystemIterator::SKIP_DOTS
             )
         );
@@ -263,7 +237,7 @@ class CacheManager
 
         foreach ($files as $file) {
             if ($file->isFile() && $file->getExtension() === 'php') {
-                unlink($file->getRealPath());
+                @unlink($file->getRealPath());
                 $count++;
             }
         }

@@ -851,7 +851,7 @@ class Sql
      * Summary of debugRequete
      * @return array{Sql: string, params: array}
      */
-    public function sqlDebug()
+    public function sqlDebug():array
     {
         return [
             'driver' => $this->getDriver(),
@@ -918,7 +918,7 @@ class Sql
      * @param array $cols
      * @return Sql
      */
-    public function set_cols(array $cols = [])
+    public function set_cols(array $cols = []):Sql
     {
         $clone = clone $this;
         $clone->initUpdate()->set($cols);
@@ -926,7 +926,7 @@ class Sql
     }
 
     /**
-     * Summary of Update
+     * Summary of update
      */
     public function update()
     {
@@ -950,12 +950,22 @@ class Sql
         return $clone;
     }
 
+    /**
+     * Summary of deepCopy
+     * @param mixed $data
+     * @return mixed
+     */
     private function deepCopy(mixed $data)
     {
         return unserialize(serialize($data));
     }
 
-    public function create_req(string $key): static
+    /**
+     * Summary of add_query
+     * @param string $key
+     * @return static
+     */
+    public function add_query(string $key): static
     {
         $clone = clone $this;
 
@@ -972,7 +982,12 @@ class Sql
         return $this;
     }
 
-    public function use_req(string $key)
+    /**
+     * Summary of use_query
+     * @param string $key
+     * @return Sql
+     */
+    public function use_query(string $key):Sql
     {
         $clone = clone $this;
 
@@ -982,6 +997,11 @@ class Sql
         return $clone;
     }
 
+    /**
+     * Summary of removeCache
+     * @param string $key
+     * @return string|null
+     */
     public static function removeCache(string $key):?string{
             $instance = new static();
            $delete = $instance->cache($key)
@@ -991,6 +1011,10 @@ class Sql
         return $delete;
     }
 
+   /**
+    * Summary of removeAllCache
+    * @return string|null
+    */
    public static function removeAllCache():string{
         $instat = new static();
         $clearAll = CacheManager::clearAll($instat->cacheDir)
@@ -1015,7 +1039,7 @@ class Sql
      * Summary of initInsert
      * @return CRUDInsert|null
      */
-    private function initInsert()
+    private function initInsert():CRUDInsert|null
     {
         if ($this->crudinsert === null) {
             $this->crudinsert = new CRUDInsert();
@@ -1027,7 +1051,7 @@ class Sql
      * Summary of initUpdate
      * @return CRUDUpdate|null
      */
-    private function initUpdate()
+    private function initUpdate():CRUDUpdate|null
     {
         if ($this->crudupdate === null) {
             $this->crudupdate = new CRUDUpdate();
@@ -1039,7 +1063,7 @@ class Sql
      * Summary of initDelete
      * @return CRUDdelete|null
      */
-    private function initDelete()
+    private function initDelete():CRUDdelete|null
     {
         if ($this->cruddelete === null) {
             $this->cruddelete = new CRUDdelete();
