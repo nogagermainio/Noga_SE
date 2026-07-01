@@ -1,36 +1,38 @@
-# 🗄️ Noga_SE - SQL Query Builder
+# 🗄️ Noga_SE - Modern SQL QueryBuilder
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![PHP](https://img.shields.io/badge/PHP-8.1+-green.svg)](https://php.net)
+[![Composer](https://img.shields.io/badge/Composer-Ready-brightgreen.svg)](https://packagist.org)
 
-**Noga_SE** est un QueryBuilder SQL moderne, fluide et immutable construit en PHP. Il offre une API élégante pour construire des requêtes SELECT, INSERT, UPDATE et DELETE avec sécurité (protection contre les injections SQL) et maintenabilité.
+**Noga_SE** is a modern, fluent, and immutable SQL QueryBuilder built in PHP 8.1+. It provides an elegant and secure API for building SELECT, INSERT, UPDATE, and DELETE queries with automatic parameter binding to prevent SQL injections.
 
 ---
 
-## ✨ Caractéristiques
+## ✨ Key Features
 
-### 🔧 Opérations CRUD Complètes
-- **SELECT** - Requêtes complexes avec jointures, sous-requêtes, agrégations
-- **INSERT** - Insertions simples et en masse
-- **UPDATE** - Mises à jour sécurisées avec conditions
-- **DELETE** - Suppressions avec protection
+### 🔧 Complete CRUD Operations
+- **SELECT** - Complex queries with joins, subqueries, aggregations, CTEs
+- **INSERT** - Single and batch insertions with secure binding
+- **UPDATE** - Safe updates with WHERE conditions
+- **DELETE** - Protected deletions with conditions
 
-### 🛡️ Sécurité
-- **Paramètres bindés** - Protection contre les injections SQL
-- **Hachage des paramètres** - Binding sécurisé avec `BindHashing`
-- **Immutabilité** - Clonage automatique pour éviter les mutations
+### 🛡️ Advanced Security
+- **Parameter Binding** - Automatic binding prevents SQL injections
+- **BindHashing** - Cryptographically random parameter keys (`:prefix_hexrand_colname`)
+- **Immutability** - Automatic cloning prevents mutations
+- **Type Safety** - Strict type checking with exceptions
 
-### ⚙️ Fonctionnalités Avancées
-- **Clauses WHERE complexes** - AND, OR, LIKE, BETWEEN, IN, EXISTS
-- **Jointures** - INNER, LEFT, RIGHT, CROSS
-- **Sous-requêtes** - Callables, instances Sql, chaînes
-- **Agrégations** - GROUP BY, HAVING, fonctions d'agrégation
-- **Unions** - UNION, UNION ALL
-- **CTE (Common Table Expressions)** - Requêtes WITH récursives
-- **Groupage & Tri** - ORDER BY, GROUP BY, LIMIT, OFFSET
-- **Cache de requêtes** - Réutilisez les requêtes compilées
+### ⚙️ Powerful Features
+- **Complex WHERE Clauses** - AND, OR, LIKE, BETWEEN, IN, EXISTS, NOT IN
+- **Joins** - INNER, LEFT, RIGHT, CROSS joins with multiple tables
+- **Subqueries** - Nested queries via callables, Select instances, or strings
+- **Aggregations** - GROUP BY, HAVING, COUNT, MAX, MIN, SUM, AVG
+- **Unions** - UNION, UNION ALL for combining results
+- **CTEs** - Common Table Expressions with recursive support
+- **Sorting & Pagination** - ORDER BY, GROUP BY, LIMIT, OFFSET
+- **Query Caching** - Reuse compiled queries efficiently
 
-### 🔗 API Fluide
+### 🔗 Fluent API
 ```php
 $query = Noga::table('users')
     ->select('id', 'name', 'email')
@@ -38,6 +40,13 @@ $query = Noga::table('users')
     ->orderBy('created_at', 'DESC')
     ->limit(10);
 ```
+
+### 🎨 Design Patterns
+- **Facade Pattern** - Unified static API
+- **Builder Pattern** - Chainable query construction
+- **Immutable Pattern** - Safe object cloning
+- **Singleton Pattern** - Single instances for managers
+- **Traits** - Reusable functionality (conditions, aggregations)
 
 ---
 
@@ -48,7 +57,9 @@ $query = Noga::table('users')
 composer require nogagermainio/noga-se
 ```
 
-### Configuration de l'autoloading
+### Manual Installation
+1. Clone the repository
+2. Configure autoloading in `composer.json`:
 ```json
 {
   "autoload": {
@@ -61,11 +72,11 @@ composer require nogagermainio/noga-se
 
 ---
 
-## 🚀 Guide de Démarrage Rapide
+## 🚀 Quick Start Guide
 
-### 1️⃣ SELECT - Requêtes de Lecture
+### 1️⃣ SELECT - Reading Data
 
-#### Requête Simple
+#### Basic Query
 ```php
 use Src\Noga;
 
@@ -74,7 +85,7 @@ $users = Noga::table('users')
     ->get();
 ```
 
-#### Avec Conditions
+#### With Conditions
 ```php
 $activeUsers = Noga::table('users')
     ->select('*')
@@ -82,7 +93,7 @@ $activeUsers = Noga::table('users')
     ->get();
 ```
 
-#### Avec Joins
+#### With Joins
 ```php
 $userPosts = Noga::table('users')
     ->select('users.name', 'posts.title')
@@ -91,65 +102,66 @@ $userPosts = Noga::table('users')
     ->get();
 ```
 
-#### Avec Sous-requêtes
+#### With Subqueries
 ```php
-$query = Noga::table('users')
+$topUsers = Noga::table('users')
     ->select('id', 'name')
-    ->whereIn('id', fn($q) => $q->table('posts')
-        ->select('user_id')
-        ->where(['published' => true]))
+    ->whereIn('id', fn($q) => 
+        $q->table('orders')
+            ->select('user_id')
+            ->where(['status' => 'completed'])
+    )
     ->get();
 ```
 
-#### Avec Agrégations
+#### With Aggregations
 ```php
 $stats = Noga::table('orders')
-    ->select('user_id', 'COUNT(*) as total')
+    ->select('user_id', 'COUNT(*) as total_orders')
     ->groupBy(['user_id'])
-    ->having(['total >' => 5])
+    ->having(['total_orders >' => 5])
     ->get();
 ```
 
-#### Avec ORDER BY & LIMIT
+#### With Sorting & Pagination
 ```php
 $topUsers = Noga::table('users')
     ->select('*')
     ->orderBy('created_at', 'DESC')
     ->limit(10)
-    ->offset(0)
+    ->offset(20)
     ->get();
 ```
 
-### 2️⃣ INSERT - Créer des Données
+### 2️⃣ INSERT - Creating Data
 
-#### Insertion Simple
+#### Single Insertion
 ```php
-use Src\QueryBuilder\Insert\Insert;
+use Src\Noga;
 
-$result = Insert::table('users')
+$result = Noga::insert('users')
     ->columns('name', 'email', 'status')
     ->values('John Doe', 'john@example.com', 'active')
     ->exc();
 ```
 
-#### Insertion Multiple
+#### Multiple Insertions
 ```php
-$insert = Insert::table('users')
-    ->columns('name', 'email', 'status');
-
-$result = $insert->values('Alice', 'alice@example.com', 'active')
+$result = Noga::insert('users')
+    ->columns('name', 'email', 'status')
+    ->values('Alice', 'alice@example.com', 'active')
     ->values('Bob', 'bob@example.com', 'inactive')
     ->exc();
 ```
 
-#### Déboguer l'Insertion
+#### Debug Insertion
 ```php
-$debug = Insert::table('users')
+$debug = Noga::insert('users')
     ->columns('name', 'email')
     ->values('Test', 'test@example.com')
     ->debugSql();
 
-// Résultat:
+// Output:
 // [
 //     "sql" => "INSERT INTO users( name,email ) VALUES(:in_xxxxx,:in_yyyyy)",
 //     "params" => [":in_xxxxx" => "Test", ":in_yyyyy" => "test@example.com"],
@@ -157,72 +169,74 @@ $debug = Insert::table('users')
 // ]
 ```
 
-### 3️⃣ UPDATE - Mettre à Jour les Données
+### 3️⃣ UPDATE - Modifying Data
 
-#### Mise à Jour Simple
-```php
-use Src\QueryBuilder\CRUDUpdate;
-
-$update = new CRUDUpdate();
-$update->set(['name' => 'Jane', 'status' => 'active']);
-// À utiliser avec Sql pour les conditions WHERE
-```
-
-#### Via Noga
+#### Simple Update
 ```php
 $result = Noga::table('users')
-    ->set_cols(['status' => 'active'])
-    ->where(['id' => 1])
+    ->set_cols(['status' => 'active', 'updated_at' => 'NOW()'])
+    ->where(['id' => 5])
     ->update();
 ```
 
-### 4️⃣ DELETE - Supprimer des Données
-
-#### Suppression Simple
+#### Update with Complex Conditions
 ```php
-use Src\QueryBuilder\CRUDdelete;
-
-$delete = new CRUDdelete();
-$sql = $delete->DeleteData('users', ['id = 1']);
-// Exécuter via la base de données
+$result = Noga::table('users')
+    ->set_cols(['verified' => true])
+    ->where([
+        'email' => 'test@example.com',
+        'status' => 'inactive'
+    ])
+    ->update();
 ```
 
-#### Via Noga
+### 4️⃣ DELETE - Removing Data
+
+#### Simple Deletion
 ```php
 $result = Noga::table('users')
     ->where(['id' => 1])
     ->delete();
 ```
 
+#### Safe Deletion with Limits
+```php
+$result = Noga::table('users')
+    ->where(['status' => 'inactive', 'last_login <' => '2023-01-01'])
+    ->limit(100)
+    ->delete();
+```
+
 ---
 
-## 📚 Documentation Complète
+## 📚 Complete API Reference
 
-### Classe Sql (Requêtes SELECT)
+### SELECT Methods
 
-#### Méthodes de Sélection
+#### Column Selection
 ```php
-$query = Noga::table('users')
-    ->select('id', 'name', 'email')           // Colonnes à sélectionner
-    ->distinct(true)                          // DISTINCT
-    ->selectCase(fn($case) => ..., 'status'); // CASE WHEN
+->select('id', 'name', 'email')           // Specific columns
+->select('*')                             // All columns
+->distinct(true)                          // Remove duplicates
+->selectCase(fn($case) => ..., 'status')  // CASE WHEN expressions
 ```
 
-#### Méthodes WHERE
+#### WHERE Clauses
 ```php
-->where(['id' => 1, 'status' => 'active'])    // WHERE avec AND
-->whereOr(['status' => 'pending', 'status' => 'draft']) // OR
-->whereLike(['name' => 'john'])                // LIKE
-->whereIn('id', [1, 2, 3])                    // IN
-->whereNotIn('id', [10, 20])                  // NOT IN
-->whereBetween(['age' => [18, 65]])           // BETWEEN
-->whereColumn('created_at', '>', 'updated_at') // Comparaison colonnes
-->isNull('deleted_at')                        // IS NULL
-->isNotnull('verified_at')                    // IS NOT NULL
-->whereExists(fn($q) => ...)                  // EXISTS
+->where(['id' => 1, 'status' => 'active'])              // AND condition
+->whereOr(['status' => 'pending', 'status' => 'draft']) // OR condition
+->whereLike(['name' => 'john'])                         // LIKE search
+->whereIn('id', [1, 2, 3])                              // IN clause
+->whereNotIn('id', [10, 20])                            // NOT IN clause
+->whereBetween(['age' => [18, 65]])                     // BETWEEN range
+->whereColumn('created_at', '>', 'updated_at')          // Column comparison
+->isNull('deleted_at')                                  // IS NULL
+->isNotnull('verified_at')                              // IS NOT NULL
+->whereExists(fn($q) => ...)                            // EXISTS subquery
+->whereNotExists(fn($q) => ...)                         // NOT EXISTS
 ```
 
-#### Méthodes de Jointure
+#### Joins
 ```php
 ->innerJoin(Noga::joins('posts', 'p')
     ->on('users.id', '=', 'p.user_id'))
@@ -236,121 +250,167 @@ $query = Noga::table('users')
 ->crossJoin(Noga::joins('departments', 'd'))
 ```
 
-#### Groupage & Agrégation
+#### Grouping & Aggregation
 ```php
 ->groupBy(['status', 'created_at'])
 ->having(['count >' => 5])
 ```
 
-#### Tri & Pagination
+#### Sorting & Pagination
 ```php
-->orderBy('created_at', 'DESC')  // ASC ou DESC
-->limit(10)
-->offset(20)
+->orderBy('created_at', 'DESC')  // ASC or DESC
+->limit(10)                       // Limit results
+->offset(20)                      // Skip results
 ```
 
-#### Union
+#### Unions
 ```php
 ->union(Noga::u()->table('admins')->select('id', 'name'))
 ->unionAll(Noga::u()->table('moderators')->select('id', 'name'))
 ```
 
-#### CTE (Common Table Expressions)
+#### CTEs (Common Table Expressions)
 ```php
 ->with('recent_users', 
     fn($q) => $q->table('users')
         ->where(['created_at >' => 'NOW()'])
 )
+->with('category_tree', 
+    fn($q) => $q->table('categories')
+        ->select('id', 'name', 'parent_id')
+        ->where(['parent_id' => null]),
+    true  // Recursive
+)
 ```
 
-#### Exécution
+#### Execution Methods
 ```php
-->get()                    // Tous les résultats (PDO::FETCH_OBJ)
-->getOne()                 // Une seule ligne
-->getStream()              // Générateur pour gros volumes
-->getSql()                 // SQL compilé
-->getParams()              // Paramètres bindés
-->sqlDebug()               // Débogage complet
+->get()                    // All results as objects
+->getOne()                 // Single row
+->getStream()              // Generator for large datasets
+->getSql()                 // Compiled SQL string
+->getParams()              // Bound parameters array
+->sqlDebug()               // Complete debugging info
 ```
 
 ---
 
-## 🗂️ Architecture du Projet
+## 🏗️ Project Architecture
 
 ```
 src/
-├── Sql.php                          # Classe principale de requête
-├── Noga.php                         # Facade statique
+├── Noga.php                             # Main Facade
 ├── QueryBuilder/
-│   ├── Insert/
-│   │   └── Insert.php              # INSERT immutable
-│   ├── ClauseBuilder.php           # Construction des clauses WHERE, SELECT
-│   ├── CRUDUpdate.php              # UPDATE builder
-│   ├── CRUDdelete.php              # DELETE builder
-│   ├── CRUDInsert.php              # INSERT builder (legacy)
-│   ├── JoinBuilder.php             # Construction des JOINS
-│   ├── UnionBuilder.php            # Construction des UNIONS
-│   ├── CaseBuilder.php             # CASE WHEN expressions
-│   └── SubBuilder.php              # Sous-requêtes
+│   ├── builder.php                     # Clause construction
+│   ├── select/                         # SELECT implementation
+│   └── crud/                           # INSERT, UPDATE, DELETE
 ├── Core/
-│   └── BindHashing.php             # Hachage sécurisé des paramètres
+│   ├── BindHashing.php                 # Secure parameter hashing
+│   ├── CacheManager.php                # Query caching
+│   ├── Sqlast.php                      # SQL parsing & AST
+│   ├── NgManager.php                   # Configuration management
+│   └── DateManager.php                 # Date formatting (FR/EN)
+├── Db/
+│   ├── DB.php                          # Database abstraction
+│   ├── mysql.php                       # MySQL driver
+│   ├── postgres.php                    # PostgreSQL driver
+│   └── sqlite.php                      # SQLite driver
 ├── Traits/
-│   ├── DbTrait.php                 # Gestion de la base de données
-│   ├── Aggregate.php               # Fonctions d'agrégation
-├── cache/
-│   └── CacheManager.php            # Cache des requêtes compilées
-├── database/
-│   └── ...                         # Configuration BD
-└── helpers/
-    └── helpers.php                 # Fonctions utilitaires
+│   ├── BuidlerAttr.php                 # Builder attributes
+│   ├── aggregate.php                   # Aggregation functions
+│   ├── condition.php                   # Condition building
+│   └── dbTrait.php                     # Database connection
+├── helpers/
+│   └── helpers.php                     # Utility functions
+├── CLI/
+│   ├── kernel.php                      # Command dispatcher
+│   └── commands/                       # Custom commands
+├── cache/                              # Query cache storage
+├── exceptions/                         # Custom exceptions
+└── mapping/                            # Data mapping
 ```
 
 ---
 
-## 🔒 Sécurité
+## 🔒 Security in Depth
 
-### Paramètres Bindés
-Tous les paramètres sont automatiquement bindés pour prévenir les injections SQL:
-
+### Parameter Binding (SQL Injection Prevention)
 ```php
-// ❌ MAUVAIS - Injection possible
+// ❌ UNSAFE - Vulnerable to SQL injection
 $query = "SELECT * FROM users WHERE id = $id";
 
-// ✅ BON - Sécurisé
+// ✅ SAFE - Parameters are bound
 $query = Noga::table('users')
-    ->where(['id' => $id])  // Paramètre sécurisé
+    ->where(['id' => $id])  // Automatically bound
     ->get();
 ```
 
-### Hachage de Paramètres
-Les paramètres sont hachés pour éviter les collisions:
+### BindHashing Mechanism
+```
+Parameter Key Generation:
+Input: ['id' => 5, 'status' => 'active']
+
+↓ BindHashing::hash()
+
+Output: 
+  :wh_a1b2c3d4_id => 5
+  :wh_e5f6g7h8_status => "active"
+
+Each key is:
+- Prefixed (:wh_ for WHERE)
+- Random hex (a1b2c3d4)
+- Column name
+- Cryptographically secure
+- Impossible to predict or inject
+```
+
+### Immutability for Safety
 ```php
-// Les clés de paramètres sont générées comme:
-// :in_xxxxx, :wh_yyyyy, :HAV_zzzzz
+$base = Noga::table('users');
+$active = $base->where(['status' => 'active']);
+$admins = $base->where(['role' => 'admin']);
+
+// $base, $active, $admins are 3 different objects
+// No side effects or shared state
 ```
 
 ---
 
-## 🧪 Tests
+## 🧪 Testing
 
+### Run Tests
 ```bash
-# Exécuter la suite de tests
+# Unix/Linux/Mac
 ./noga test
 
 # Windows
 noga.bat test
 ```
 
-### Fichiers de Test
-- `test/` - Suite de tests PHPUnit
+### Test Files
+- `test/NogaTest.php` - PHPUnit test suite
+- `test/test.php` - Basic examples
+- `test/users.php` - User table examples
+
+### Test Configuration
+```xml
+<!-- phpunit.xml -->
+<phpunit bootstrap="vendor/autoload.php">
+    <testsuites>
+        <testsuite name="Builder SQL Suite">
+            <directory>./test</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
+```
 
 ---
 
-## 💡 Exemples Avancés
+## 💡 Advanced Examples
 
-### Requête Complexe Multilevel
+### Complex Multi-Level Query
 ```php
-$query = Noga::table('orders')
+$results = Noga::table('orders')
     ->select(
         'orders.id',
         'orders.total',
@@ -368,142 +428,255 @@ $query = Noga::table('orders')
     ->groupBy(['orders.id', 'customers.name'])
     ->having(['item_count >' => 3])
     ->orderBy('orders.total', 'DESC')
-    ->limit(20);
-
-$results = $query->get();
-```
-
-### Avec Sous-requête
-```php
-$topCustomers = Noga::table('customers')
-    ->select('id', 'name', 'email')
-    ->whereIn('id', fn($q) =>
-        $q->table('orders')
-            ->select('customer_id')
-            ->groupBy(['customer_id'])
-            ->having(['COUNT(*) >' => 10])
-    )
+    ->limit(20)
     ->get();
 ```
 
-### Avec CTE Récursive
+### Recursive CTE
 ```php
 $hierarchy = Noga::table('categories')
     ->with('category_tree', 
         fn($q) => $q->table('categories')
             ->select('id', 'name', 'parent_id')
             ->where(['parent_id' => null]),
-        true  // Récursive
+        true  // Recursive
     )
     ->select('*')
     ->get();
 ```
 
-### Cache de Requête
+### Query Caching
 ```php
-// Enregistrer une requête
+// Register query
 Noga::table('users')
     ->select('id', 'name')
+    ->where(['status' => 'active'])
     ->add_query('get_active_users');
 
-// Réutiliser
+// Reuse from cache
 $users = Noga::use_query('get_active_users')->get();
 
-// Supprimer du cache
+// Clear cache
 Noga::removeCache('get_active_users');
 Noga::removeAllCache();
 ```
 
----
-
-## 🏗️ Immutabilité et Pattern Builder
-
-### Immutable par Design
-Chaque méthode retourne un **nouvel objet cloné**, garantissant l'immuabilité:
-
+### EXPLAIN Query Analysis
 ```php
-$base = Noga::table('users');
-$active = $base->where(['status' => 'active']);
-$admins = $base->where(['role' => 'admin']);
-
-// $base, $active et $admins sont 3 objets différents
-// Les modifications n'affectent pas la requête originale
-```
-
-### Chainable
-```php
-$result = Noga::table('users')
-    ->select('id', 'name')
-    ->where(['active' => 1])
-    ->orderBy('name')
-    ->limit(10)
-    ->get();
+$analysis = Noga::explain(
+    Noga::table('users')
+        ->select('*')
+        ->where(['id' => 1]),
+    'FORMAT=JSON'
+);
 ```
 
 ---
 
-## 📋 Configuration
+## 🔧 Configuration
 
-### Fichier .env (optionnel)
-Les paramètres de connexion doivent être configurés via les traits DbTrait.
+### Database Configuration
+Configure via `NgManager` or environment file:
 
----
+```php
+// Initialize configuration
+$config = NgManager::getInstance('path/to/.env');
 
-## 🤝 Contribution
+// Access parameters
+$host = ng('db_host');
+$port = ng('db_port', 3306);
+```
 
-Les contributions sont bienvenues! Veuillez:
-
-1. Fork le projet
-2. Créer une branche (`git checkout -b feature/AmazingFeature`)
-3. Commit les changements (`git commit -m 'Add some AmazingFeature'`)
-4. Push vers la branche (`git push origin feature/AmazingFeature`)
-5. Ouvrir une Pull Request
-
----
-
-## 📄 Licence
-
-Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
-
----
-
-## 👨‍💻 Auteur
-
-**nogagermainio** - [GitHub Profile](https://github.com/nogagermainio)
+### Cache Configuration
+```php
+CacheManager::key("my_query")
+    ->dir("queries")
+    ->delay(3600)  // 1 hour
+    ->data($result)
+    ->put();
+```
 
 ---
 
-## 🔗 Ressources Connexes
+## 🎯 Use Cases
 
-- **Noga_Http** - Framework HTTP complémentaire
-- **PHP PDO** - [Documentation PDO](https://www.php.net/manual/fr/book.pdo.php)
+✅ **Modern Web Applications** - Build safe, fluent queries  
+✅ **API Development** - Complex data retrieval with filters  
+✅ **Data Analysis** - Aggregations, CTEs, subqueries  
+✅ **Reporting Systems** - Multi-table joins and summaries  
+✅ **Admin Dashboards** - Dynamic filtering and sorting  
+✅ **Microservices** - Database abstraction layer  
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the project
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+### Development Setup
+```bash
+# Clone repository
+git clone https://github.com/nogagermainio/Noga_SE.git
+cd Noga_SE
+
+# Install dependencies
+composer install
+
+# Run tests
+./noga test
+
+# Check code
+./noga lint
+```
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+```
+MIT License
+
+Copyright (c) 2026 nogagermainio
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions above.
+```
+
+---
+
+## 👨‍💻 Author
+
+**nogagermainio**
+
+- GitHub: [@nogagermainio](https://github.com/nogagermainio)
+- Email: [your-email@example.com](mailto:contact@nogagermainio.dev)
+
+---
+
+## 🔗 Related Projects
+
+- **Noga_Http** - HTTP Framework companion
+- **Noga_CLI** - Command-line interface tools
+- [PHP PDO Documentation](https://www.php.net/manual/en/book.pdo.php)
 
 ---
 
 ## 🆘 Support & Issues
 
-Vous rencontrez un bug? Ouvrez une [issue](https://github.com/nogagermainio/Noga_SE/issues) avec:
-- Description du problème
-- Code de reproduction
-- Environnement (PHP, OS, BD)
+Found a bug? Want a feature? Please [open an issue](https://github.com/nogagermainio/Noga_SE/issues) with:
+
+- ✅ Clear problem description
+- ✅ Minimal code reproduction
+- ✅ Expected vs actual behavior
+- ✅ PHP version and OS
+
+### Common Issues
+
+**Q: How do I prevent SQL injection?**  
+A: All parameters are automatically bound via BindHashing. Never concatenate user input!
+
+**Q: Can I cache queries?**  
+A: Yes! Use `->add_query('name')` and `Noga::use_query('name')`
+
+**Q: Is it compatible with my database?**  
+A: Noga_SE supports MySQL, PostgreSQL, SQLite, and is easily extended for others.
+
+**Q: How do I contribute?**  
+A: Fork the repo, create a feature branch, and submit a pull request.
 
 ---
 
 ## 📊 Roadmap
 
-- [x] SELECT avec clauses avancées
-- [x] INSERT avec binding sécurisé
-- [x] UPDATE avec conditions
-- [x] DELETE avec protection
-- [x] Jointures (INNER, LEFT, RIGHT, CROSS)
-- [x] Sous-requêtes
-- [x] Unions & Intersections
-- [x] CTE récursives
-- [ ] Refactorisation CRUD en architecture immutable/registry
-- [ ] Builders CRUD standardisés
-- [ ] Support des triggers & stored procedures
-- [ ] Middleware de logging
+### ✅ Completed
+- [x] SELECT with advanced clauses
+- [x] INSERT with secure binding
+- [x] UPDATE with conditions
+- [x] DELETE with protection
+- [x] Joins (INNER, LEFT, RIGHT, CROSS)
+- [x] Subqueries & nesting
+- [x] Unions & intersections
+- [x] Recursive CTEs
+- [x] Immutability & cloning
+- [x] Query caching
+
+### 🔄 In Progress
+- [ ] Enhanced error reporting
+- [ ] Performance profiling
+- [ ] Query optimization hints
+- [ ] Additional database drivers
+
+### 📋 Planned
+- [ ] Trigger & stored procedure support
+- [ ] Database schema builders
+- [ ] Migration system
+- [ ] Query logging middleware
+- [ ] Batch optimization
+- [ ] Full-text search support
+
+---
+
+## 📈 Performance Tips
+
+1. **Use Pagination** - Limit large result sets
+   ```php
+   ->limit(20)->offset($page * 20)
+   ```
+
+2. **Cache Frequently Used Queries** - Reuse compiled queries
+   ```php
+   ->add_query('active_users')
+   ```
+
+3. **Use Indexes** - Create database indexes on WHERE columns
+   ```sql
+   CREATE INDEX idx_status ON users(status);
+   ```
+
+4. **Batch Operations** - Insert multiple rows at once
+   ```php
+   ->values(...)->values(...)->values(...)
+   ```
+
+5. **Select Only Needed Columns** - Avoid SELECT *
+   ```php
+   ->select('id', 'name', 'email')  // Not SELECT *
+   ```
+
+---
+
+## 📞 Community & Discussions
+
+- 💬 [GitHub Discussions](https://github.com/nogagermainio/Noga_SE/discussions)
+- 🐛 [Issue Tracker](https://github.com/nogagermainio/Noga_SE/issues)
+- 📚 [Wiki & Documentation](https://github.com/nogagermainio/Noga_SE/wiki)
+
+---
+
+## 🌟 Show Your Support
+
+If you find Noga_SE helpful, please consider:
+
+- ⭐ Star the repository
+- 🍴 Fork and contribute
+- 📢 Share with your network
+- 💬 Leave feedback
 
 ---
 
 **Made with ❤️ by nogagermainio**
+
+Last updated: 2026-07-01  
+Version: 1.0.0
