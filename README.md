@@ -8,6 +8,10 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-supported-336791?style=for-the-badge&logo=postgresql&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-supported-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
 
+![Stars](https://img.shields.io/github/stars/nogagermainio/Noga_SE?style=for-the-badge)
+![Forks](https://img.shields.io/github/forks/nogagermainio/Noga_SE?style=for-the-badge)
+![Issues](https://img.shields.io/github/issues/nogagermainio/Noga_SE?style=for-the-badge)
+
 **Noga_SE** is a modern, fluent, and immutable SQL QueryBuilder built in PHP 8.1+. It provides an elegant and secure API for building SELECT, INSERT, UPDATE, and DELETE queries with automatic parameter binding to prevent SQL injections.
 
 ---
