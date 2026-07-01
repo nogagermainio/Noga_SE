@@ -1,0 +1,10 @@
+.github/ export-ignore
+Tests/ export-ignore
+docs/ export-ignore
+examples/ export-ignore
+phpunit.xml export-ignore
+.gitignore export-ignore
+.vscode export-ignore
+.phpunit.cache export-ignore
+membres_msbc.json export-ignore
+membres_msbc.json export-ignore

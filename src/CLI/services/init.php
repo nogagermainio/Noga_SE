@@ -72,7 +72,7 @@ public static function boot(array $command = []){
     echo "---------------------------------------------------------------------------\n";
     echo "-------------------------- ". color("WELCOME TO THE NOGA",'green')." -----------------------\n";
     echo "----------------------------------------------------------------------------\n";
-    echo "-------------------------- ".color("version 1.0","green")." ----------------------\n";
+    echo "-------------------------- ".color("version 0.1.0","green")." ----------------------\n";
     echo "\n";
     echo "\n";
     echo "----------------------------------------------------------------------------\n";
@@ -85,7 +85,7 @@ public static function boot(array $command = []){
 } 
 
 public static function fileContent(string $name){
-    return '# ng-config v1.0.0
+    return '# ng-config v0.1.0
 # Configuration file for the mini-framework noga application
 # Database settings
 # Adjust these settings according to your environment
