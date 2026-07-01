@@ -1,4 +1,4 @@
-# 🗄️ Noga_SE - Modern SQL QueryBuilder
+# 🗄️ Noga_SE - Modern SQL QueryBuilder version : 1.0
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![PHP](https://img.shields.io/badge/PHP-8.1+-green.svg)](https://php.net)
@@ -50,12 +50,6 @@ $query = Noga::table('users')
 
 ---
 
-## 📦 Installation
-
-### Via Composer
-```bash
-composer require nogagermainio/noga-se
-```
 
 ### Manual Installation
 1. Clone the repository
@@ -64,7 +58,7 @@ composer require nogagermainio/noga-se
 {
   "autoload": {
     "psr-4": {
-      "Src\\": "src/"
+      "Noga\\": "src/"
     }
   }
 }
@@ -78,7 +72,7 @@ composer require nogagermainio/noga-se
 
 #### Basic Query
 ```php
-use Src\Noga;
+use Noga\Noga;
 
 $users = Noga::table('users')
     ->select('id', 'name', 'email')
@@ -135,23 +129,38 @@ $topUsers = Noga::table('users')
 
 ### 2️⃣ INSERT - Creating Data
 
+Executing mode : 
+
+```php
+->exec(); //interact with database
+->getQuery(); //inspect Sql query string
+->getValues(); //get all values
+->viewState(); // show request 
+```
+
 #### Single Insertion
 ```php
-use Src\Noga;
+use Noga\Noga;
 
 $result = Noga::insert('users')
     ->columns('name', 'email', 'status')
     ->values('John Doe', 'john@example.com', 'active')
-    ->exc();
+    ->exec(); //execute mode PDO 
 ```
 
-#### Multiple Insertions
+#### bulk Insertions
 ```php
 $result = Noga::insert('users')
-    ->columns('name', 'email', 'status')
-    ->values('Alice', 'alice@example.com', 'active')
-    ->values('Bob', 'bob@example.com', 'inactive')
-    ->exc();
+    ->from(__DIR__."/../membres.json")
+    ->take() // obligatory 
+    ->viewState();
+
+ json format
+    // [
+// {"id":"48","identifiant":"659225887","noms":"Noga","prenoms":"Germainio"},
+// {"id":"48","identifiant":"659225887","noms":"Ephore","prenoms":"Miasa"},
+//  ....
+    // ]
 ```
 
 #### Debug Insertion
@@ -159,52 +168,94 @@ $result = Noga::insert('users')
 $debug = Noga::insert('users')
     ->columns('name', 'email')
     ->values('Test', 'test@example.com')
-    ->debugSql();
-
-// Output:
-// [
-//     "sql" => "INSERT INTO users( name,email ) VALUES(:in_xxxxx,:in_yyyyy)",
-//     "params" => [":in_xxxxx" => "Test", ":in_yyyyy" => "test@example.com"],
-//     "binding" => [":in_xxxxx", ":in_yyyyy"]
-// ]
+    ->viewState();
+    
+// output
+//   "sql": "INSERT INTO users( name,email )  VALUES(:in_c9f9f93a_name,:in_968abc56_email)",
+//     "params": {
+//         ":in_c9f9f93a_name": "Test",
+//         ":in_968abc56_email": "test@example.com"
+//     },
+//     "driver": "mysql",
+//     "table": "users",
+//     "columns": [
+//         "name",
+//         "email"
+//     ],
+//     "values": [
+//         "Test",
+//         "test@example.com"
+//     ],
+//     "binding": [
+//         ":in_c9f9f93a_name",
+//         ":in_968abc56_email"
+//     ]
 ```
 
 ### 3️⃣ UPDATE - Modifying Data
 
+execution mode :
+
+```php
+->exec(); //interact with database
+->getQuery(); //inspect Sql query string
+->getValues(); //get all values
+->viewState(); // show request 
+```
+
 #### Simple Update
 ```php
-$result = Noga::table('users')
-    ->set_cols(['status' => 'active', 'updated_at' => 'NOW()'])
+$result = Noga::update('users')
+    ->set(['status' => 'active', 'updated_at' => 'NOW()'])
     ->where(['id' => 5])
-    ->update();
+    ->exec(); //PDO request
 ```
 
 #### Update with Complex Conditions
 ```php
-$result = Noga::table('users')
-    ->set_cols(['verified' => true])
-    ->where([
+$result = Noga::update("users")
+          ->set(['verified' => true])
+          ->where([
         'email' => 'test@example.com',
         'status' => 'inactive'
-    ])
-    ->update();
+            ])
+          ->exec();
 ```
 
 ### 4️⃣ DELETE - Removing Data
+execution mode :
 
+```php
+->exec(); //interact with database
+->getQuery(); //inspect Sql query string
+->getParams(); //get all params binding
+->viewState(); // show request 
+```
 #### Simple Deletion
 ```php
-$result = Noga::table('users')
+$result = Noga::delete('users')
     ->where(['id' => 1])
-    ->delete();
+    ->exec();
 ```
 
 #### Safe Deletion with Limits
 ```php
-$result = Noga::table('users')
+$result = Noga::delete('users')
     ->where(['status' => 'inactive', 'last_login <' => '2023-01-01'])
     ->limit(100)
-    ->delete();
+    ->exec(); //PDO
+
+//  output with ->viewState();
+
+//   "Query": " DELETE FROM users 
+//              WHERE status = :wh_c7e10fa3_status AND last_login < :wh_1878caa8_last_login  
+//              LIMIT 100 ",
+//     "params": {
+//         ":wh_c7e10fa3_status": "inactive",
+//         ":wh_1878caa8_last_login": "2023-01-01"
+//     },
+//     "table": "users",
+//     "driver": "mysql"
 ```
 
 ---
@@ -218,7 +269,9 @@ $result = Noga::table('users')
 ->select('id', 'name', 'email')           // Specific columns
 ->select('*')                             // All columns
 ->distinct(true)                          // Remove duplicates
-->selectCase(fn($case) => ..., 'status')  // CASE WHEN expressions
+->selectCase(fn($case) =>$case->when("id","12")->else("25")->as("c"), 'status')  // CASE WHEN expressions
+//or
+->selectCase(Noga::c("id","12")->else("25")->as("c"), 'status')  
 ```
 
 #### WHERE Clauses
@@ -238,16 +291,16 @@ $result = Noga::table('users')
 
 #### Joins
 ```php
-->innerJoin(Noga::joins('posts', 'p')
+->innerJoin(Noga::j('posts', 'p')
     ->on('users.id', '=', 'p.user_id'))
 
-->leftJoin(Noga::joins('comments', 'c')
+->leftJoin(Noga::j('comments', 'c')
     ->on('posts.id', '=', 'c.post_id'))
 
-->rightJoin(Noga::joins('categories', 'cat')
+->rightJoin(Noga::j('categories', 'cat')
     ->on('posts.category_id', '=', 'cat.id'))
 
-->crossJoin(Noga::joins('departments', 'd'))
+->crossJoin(Noga::j('departments', 'd'))
 ```
 
 #### Grouping & Aggregation
@@ -265,8 +318,20 @@ $result = Noga::table('users')
 
 #### Unions
 ```php
+
+//union simple 
 ->union(Noga::u()->table('admins')->select('id', 'name'))
 ->unionAll(Noga::u()->table('moderators')->select('id', 'name'))
+
+//union with table dynamique
+->unionAll(Noga::u()->from(['admin','moderators'])->select('id','name')) 
+
+// union with a condition multiple
+->unionAll(Noga::u()->add([
+    Noga::table("users")
+    ->select("id","noms")
+    ->where(["id"=>12])
+    ])) 
 ```
 
 #### CTEs (Common Table Expressions)
@@ -275,6 +340,7 @@ $result = Noga::table('users')
     fn($q) => $q->table('users')
         ->where(['created_at >' => 'NOW()'])
 )
+
 ->with('category_tree', 
     fn($q) => $q->table('categories')
         ->select('id', 'name', 'parent_id')
@@ -288,9 +354,9 @@ $result = Noga::table('users')
 ->get()                    // All results as objects
 ->getOne()                 // Single row
 ->getStream()              // Generator for large datasets
-->getSql()                 // Compiled SQL string
+->getQuery()                 // Compiled SQL string
 ->getParams()              // Bound parameters array
-->sqlDebug()               // Complete debugging info
+->viewState()               // Complete request info
 ```
 
 ---
@@ -443,6 +509,17 @@ $hierarchy = Noga::table('categories')
     )
     ->select('*')
     ->get();
+
+    //or
+    $hierarchy = Noga::table('categories')
+    ->with('category_tree', 
+        Noga::table('categories')
+            ->select('id', 'name', 'parent_id')
+            ->where(['parent_id' => null]),
+        true  // Recursive
+    )
+    ->select('*')
+    ->get();
 ```
 
 ### Query Caching
@@ -480,7 +557,7 @@ Configure via `NgManager` or environment file:
 
 ```php
 // Initialize configuration
-$config = NgManager::getInstance('path/to/.env');
+$config = NgManager::getInstance('path/to/ngconfig.ng');
 
 // Access parameters
 $host = ng('db_host');

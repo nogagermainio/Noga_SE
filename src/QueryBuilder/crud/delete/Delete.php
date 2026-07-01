@@ -12,13 +12,25 @@ class Delete
     use DbTrait;
     protected string $sql = '';
     private string $table = '';
+    private int|null $limit = null;
     public function __construct(string $table)
     {
        $this->table = $table;
     }
 
-    public static function table(string $table):static{
+    public static function table(string $table):Delete{
         return clone new static($table);
+    }
+
+    /**
+     * Summary of limit
+     * @param int $limit
+     * @return Delete
+     */
+    public function limit(int $limit):Delete{
+        $clone = clone $this;
+        $clone->limit = $limit;
+        return $clone;
     }
 
     private function compile(){
@@ -26,7 +38,8 @@ class Delete
         $this->sql = " DELETE FROM {$this->table} ";
         if(empty($this->conditions)) throw new RuntimeException("Cannot use delete if conditions is empty ");
         $this->sql .= " WHERE {$conditions} ";
-
+        if($this->limit !== null) $this->sql .= " LIMIT {$this->limit} ";
+        
         return $this->sql;
     }
 

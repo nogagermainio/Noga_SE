@@ -125,8 +125,8 @@ class Select{
      * Summary of case
      * @return Cases
      */
-    public static function cases():Cases{
-        return (new Cases());
+    public static function c(string $condition, string $then, ?string $bindValue = ''):Cases{
+        return (new Cases())->when($condition,$then,$bindValue);
     }
 
     /**
