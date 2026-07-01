@@ -3,6 +3,7 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![PHP](https://img.shields.io/badge/PHP-8.1+-green.svg)](https://php.net)
 [![Composer](https://img.shields.io/badge/Composer-Ready-brightgreen.svg)](https://packagist.org)
+[![Latest Version](https://img.shields.io/packagist/v/nogagermainio/noga-se)](https://packagist.org/packages/nogagermainio/noga-se)
 
 ![Status](https://img.shields.io/badge/status-active-success?style=for-the-badge)
 ![Type](https://img.shields.io/badge/type-querybuilder-important?style=for-the-badge)
