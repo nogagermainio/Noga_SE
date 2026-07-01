@@ -1,5 +1,5 @@
 <?php
-namespace Src\Facade;
+namespace Noga\Facade;
 use BadMethodCallException;
 use LogicException;
 

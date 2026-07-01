@@ -1,8 +1,8 @@
 <?php
 namespace Test;
 
-use Src\CLI\Services\Render;
-use Src\Noga;
+use Noga\CLI\Services\Render;
+use Noga\Noga;
 
 class Test{
 

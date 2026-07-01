@@ -1,10 +1,10 @@
-<?php
-namespace Src\CLI\Command;
+<?php declare(strict_types=1);
+namespace Noga\CLI\Command;
 
-use Src\Core\CacheManager;
+use Noga\Core\CacheManager;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use Src\CLI\Services\Render;
+use Noga\CLI\Services\Render;
 
 class Command
 {

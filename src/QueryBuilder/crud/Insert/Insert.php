@@ -1,12 +1,12 @@
-<?php
-namespace Src\QueryBuilder\Crud\Insert;
+<?php declare(strict_types=1);
+namespace Noga\QueryBuilder\Crud\Insert;
 
 use finfo;
 use InvalidArgumentException;
 use PDOException;
 use RuntimeException;
-use Src\Core\BindHashing;
-use Src\Traits\DbTrait;
+use Noga\Core\BindHashing;
+use Noga\Traits\DbTrait;
 
 class Insert
 {

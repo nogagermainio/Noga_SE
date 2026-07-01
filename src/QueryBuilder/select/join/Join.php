@@ -1,8 +1,7 @@
-<?php
-namespace Src\QueryBuilder\Select\Join;
+<?php declare(strict_types=1);
+namespace Noga\QueryBuilder\Select\Join;
 use InvalidArgumentException;
-use Src\QueryBuilder\Select\Select;
-use Src\Sql;
+use Noga\QueryBuilder\Select\Select;
 
 class Join
 {

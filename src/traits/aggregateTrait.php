@@ -1,32 +1,33 @@
-<?php
+<?php declare(strict_types=1);
 
-namespace Src\Traits;
-use Src\Sql;
-use Src\QueryBuilder\AggregateBuilder;
+namespace Noga\Traits;
 
-trait Aggregate{
+use Noga\QueryBuilder\Select\Aggregate\Aggregate;
+use Noga\QueryBuilder\Select\Select;
 
-    protected ?AggregateBuilder $buildaggregate = null;
+trait AggregateTrait{
+
+    protected ?Aggregate $buildaggregate = null;
  
       /**
      * Summary of initaggregate
-     * @return AggregateBuilder|null
+     * @return Aggregate|null
      */
-    private function initaggregate(): AggregateBuilder
+    private function initaggregate(): Aggregate
     {
         if ($this->buildaggregate === null) {
-            $this->buildaggregate = new AggregateBuilder();
+            $this->buildaggregate = new Aggregate();
         }
         return $this->buildaggregate;
     }
 
     /**
      * Summary of sum
-     * @param string|Sql|callable $value
+     * @param string|Select|callable $value
      * @param mixed $alias
      * @return string
      */
-    public static function sum(string | Sql | callable $value, ?string $alias = ''): string
+    public static function sum(string | Select | callable $value, ?string $alias = ''): string
     {
         $instance = new static();
 
@@ -36,11 +37,11 @@ trait Aggregate{
 
     /**
      * Summary of avg
-     * @param string|Sql|callable $value
+     * @param string|Select|callable $value
      * @param mixed $alias
      * @return string
      */
-    public static function avg(string | Sql | callable $value, ?string $alias = ''): string
+    public static function avg(string | Select | callable $value, ?string $alias = ''): string
     {
         $instance = new static();
         return $instance->initaggregate()
@@ -49,11 +50,11 @@ trait Aggregate{
 
     /**
      * Summary of max
-     * @param string|Sql|callable $value
+     * @param string|Select|callable $value
      * @param mixed $alias
      * @return string
      */
-    public static function max(string | Sql | callable $value, ?string $alias = ''): string
+    public static function max(string | Select | callable $value, ?string $alias = ''): string
     {
         $instance = new static();
         return $instance->initaggregate()
@@ -62,11 +63,11 @@ trait Aggregate{
 
     /**
      * Summary of min
-     * @param string|Sql|callable $value
+     * @param string|Select|callable $value
      * @param mixed $alias
      * @return string
      */
-    public static function min(string | Sql | callable $value, ?string $alias = ''): string
+    public static function min(string | Select | callable $value, ?string $alias = ''): string
     {
         $instance = new static();
         return $instance->initaggregate()
@@ -74,11 +75,11 @@ trait Aggregate{
     }
 
     /**
-     * @param string|Sql|callable $value
+     * @param string|Select|callable $value
      * @param mixed $alias
      * @return string
      */
-    public static function count(string | Sql | callable $value, ?string $alias = ''): string
+    public static function count(string | Select | callable $value, ?string $alias = ''): string
     {
         $instance = new static();
         return $instance->initaggregate()
@@ -87,12 +88,12 @@ trait Aggregate{
 
     /**
      * Summary of coalesce
-     * @param string|Sql|callable $value
+     * @param string|Select|callable $value
      * @param string|int $concat
      * @param mixed $alias
      * @return string
      */
-    public static function coalesce(string | Sql | callable $value, string | int $concat, ?string $alias = ''): string
+    public static function coalesce(string | Select | callable $value, string | int $concat, ?string $alias = ''): string
     {
         $instance = new static();
         return $instance->initaggregate()

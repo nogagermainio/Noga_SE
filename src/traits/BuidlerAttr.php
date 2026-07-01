@@ -1,7 +1,7 @@
 <?php
-namespace Src\Traits;
+namespace Noga\Traits;
 
-use Src\QueryBuilder\Select\Select;
+use Noga\QueryBuilder\Select\Select;
 
 trait BuidlerAttr{
 

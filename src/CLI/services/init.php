@@ -1,7 +1,7 @@
-<?php
-namespace Src\CLI\Services;
+<?php declare(strict_types=1);
+namespace Noga\CLI\Services;
 
-use Src\CLI\Services\Render;
+use Noga\CLI\Services\Render;
 
 class Init
 {

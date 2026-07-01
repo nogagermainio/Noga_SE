@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
-namespace Src\Db;
+namespace Noga\Db;
 
 use PDO;
-use Src\Db\DB;
+use Noga\Db\DB;
 
 class Sqlite extends DB
 {

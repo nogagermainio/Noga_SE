@@ -1,7 +1,7 @@
 <?php
 namespace Test;
 use PHPUnit\Framework\TestCase;
-use Src\Noga;
+use Noga\Noga;
 
 final class NogaTest extends TestCase
 {
@@ -37,8 +37,8 @@ protected function normalizeSql(string $sql): string
         $builder2 = $builder->where(['id'=>10]);
 
         // Immutabilité : builder d'origine intact
-        $this->assertStringNotContainsString('WHERE', $builder->getSql());
-        $this->assertStringContainsString('WHERE id =', $builder2->getSql());
+        $this->assertStringNotContainsString('WHERE', $builder->getQuery());
+        $this->assertStringContainsString('WHERE id =', $builder2->getQuery());
     }
 
     public function testGroupByAndSum()
@@ -75,15 +75,15 @@ WITH RECURSIVE categories AS (
 )
 SELECT id,name,category_id FROM products AS p WHERE active = :wh_
 SQL;
-$sql = $this->normalizeSql($builder->getSql());
+$sql = $this->normalizeSql($builder->getQuery());
 $expectedNormalized = $this->normalizeSql($expected);
 
 $this->assertStringContainsString($expectedNormalized, $sql);
 
     // Immutabilité : builder original intact
     $builder2 = $builder->where(["id"=>10]);
-    $this->assertStringNotContainsString("id =", $this->normalizeSql($builder->getSql()));
-    $this->assertStringContainsString("id =", $this->normalizeSql($builder2->getSql()));
+    $this->assertStringNotContainsString("id =", $this->normalizeSql($builder->getQuery()));
+    $this->assertStringContainsString("id =", $this->normalizeSql($builder2->getQuery()));
 }
 
 
@@ -92,8 +92,8 @@ $this->assertStringContainsString($expectedNormalized, $sql);
         $builder = Noga::table('product','p')->select(['id','name']);
         $builder2 = $builder->isNull('name');
 
-        $this->assertStringNotContainsString('IS NULL', $builder->getSql());
-        $this->assertStringContainsString('name IS NULL', $builder2->getSql());
+        $this->assertStringNotContainsString('IS NULL', $builder->getQuery());
+        $this->assertStringContainsString('name IS NULL', $builder2->getQuery());
     }
 
     public function testInnerJoin()
@@ -103,7 +103,7 @@ $this->assertStringContainsString($expectedNormalized, $sql);
                 Noga::joins('table','t')->on('t.id','12')
             );
 
-        $this->assertStringContainsString('INNER JOIN table AS t ON t.id = 12', $builder->getSql());
+        $this->assertStringContainsString('INNER JOIN table AS t ON t.id = 12', $builder->getQuery());
     }
 
 

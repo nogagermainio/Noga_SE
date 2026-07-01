@@ -1,12 +1,12 @@
-<?php
-namespace Src\QueryBuilder\Crud\Update;
+<?php declare(strict_types=1);
+namespace Noga\QueryBuilder\Crud\Update;
 
 use PDOException;
 use PDOStatement;
 use RuntimeException;
-use Src\Core\BindHashing;
-use Src\Traits\Condition;
-use Src\Traits\DbTrait;
+use Noga\Core\BindHashing;
+use Noga\Traits\Condition;
+use Noga\Traits\DbTrait;
 /**
  * Summary of CRUDUpdate
  */

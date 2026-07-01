@@ -1,8 +1,8 @@
 <?php
-namespace Src\Traits;
+namespace Noga\Traits;
 
-use Src\QueryBuilder\Builder;
-use Src\QueryBuilder\Select\Select;
+use Noga\QueryBuilder\Builder;
+use Noga\QueryBuilder\Select\Select;
 
 trait Condition{
 

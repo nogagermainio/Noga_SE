@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-namespace Src\CLI\Services;
+namespace Noga\CLI\Services;
 
 use RuntimeException;
 use Throwable;

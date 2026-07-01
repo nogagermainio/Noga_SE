@@ -1,5 +1,5 @@
 <?php
-namespace Src\Db;
+namespace Noga\Db;
 use Generator;
 use PDO;
 use PDOException;

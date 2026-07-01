@@ -1,6 +1,7 @@
-<?php
-use Src\Core\NgManager;
-use Src\Core\DateManager;
+<?php declare(strict_types=1);
+
+use Noga\Core\NgManager;
+use Noga\Core\DateManager;
 
  function clean(string $name){
     // $name = strtolower($name);

@@ -1,8 +1,5 @@
 <?php
-namespace Src\Exceptions;
-
-use Throwable;
-use Override;
+namespace Noga\Exceptions;
 
 class BadMethodException extends QueryException{
     public function __construct(string $message = "This method is not allowed ")

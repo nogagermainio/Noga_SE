@@ -1,5 +1,5 @@
-<?php
-namespace Src\Core;
+<?php declare(strict_types=1);
+namespace Noga\Core;
 
 class DateManager {
     private string $date;
@@ -38,10 +38,12 @@ class DateManager {
     public function __construct(string $date = '', ?string $lang = null, ?string $format = 'd m Y') {
         $this->date = \str_replace('/','-',$date) ?: 'now';
         $this->timestamp = strtotime($this->date);
-        if ($this->timestamp === false) 
-            throw new \RuntimeException("Erreur : date invalide !");
+        if ($this->timestamp === false){
+             throw new \RuntimeException("Erreur : date invalide !");
+        } 
+           
 
-        $this->lang = $lang ? strtolower($lang) : substr(setlocale(LC_TIME, 0), 0, 2);
+        $this->lang = $lang ? strtolower($lang) : substr(setlocale(LC_TIME, '0'), 0, 2);
         $this->lang = in_array($this->lang, ['fr','en']) ? $this->lang : 'fr';
         $this->format = $format ?? 'd m Y';
 

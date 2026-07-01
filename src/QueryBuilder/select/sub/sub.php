@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
-namespace Src\QueryBuilder\Select\Sub;
+namespace Noga\QueryBuilder\Select\Sub;
 
-use Src\QueryBuilder\Select\Select;
+use Noga\QueryBuilder\Select\Select;
 
 class Sub {
     protected string $sql = "";

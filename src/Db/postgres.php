@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
-namespace Src\Db;
+namespace Noga\Db;
 
-use Src\Db\DB;
+use Noga\Db\DB;
 
 class Postgres extends DB
 {

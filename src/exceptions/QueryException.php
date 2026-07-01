@@ -1,5 +1,5 @@
 <?php
-namespace Src\Exceptions;
+namespace Noga\Exceptions;
 
 use Exception;
 use Throwable;

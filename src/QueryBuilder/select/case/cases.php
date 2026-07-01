@@ -1,8 +1,8 @@
-<?php
-namespace Src\QueryBuilder\Select\Case;
+<?php declare(strict_types=1);
+namespace Noga\QueryBuilder\Select\Case;
 
 use InvalidArgumentException;
-use Src\Core\BindHashing;
+use Noga\Core\BindHashing;
 
 class Cases {
     protected string $name = "";

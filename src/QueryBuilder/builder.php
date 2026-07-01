@@ -1,15 +1,15 @@
 <?php declare (strict_types = 1);
 
-namespace Src\QueryBuilder;
+namespace Noga\QueryBuilder;
 
 use InvalidArgumentException;
 use RuntimeException;
-use Src\Core\BindHashing;
-use Src\QueryBuilder\Select\Case\Cases;
-use Src\QueryBuilder\Select\Join\Join;
-use Src\QueryBuilder\Select\Select;
-use Src\QueryBuilder\Select\Union\Union;
-use Src\Traits\BuidlerAttr;
+use Noga\Core\BindHashing;
+use Noga\QueryBuilder\Select\Case\Cases;
+use Noga\QueryBuilder\Select\Join\Join;
+use Noga\QueryBuilder\Select\Select;
+use Noga\QueryBuilder\Select\Union\Union;
+use Noga\Traits\BuidlerAttr;
 
 class Builder
 {

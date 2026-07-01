@@ -1,7 +1,5 @@
-<?php
-namespace Src\Core;
-
-use LogicException;
+<?php declare(strict_types=1);
+namespace Noga\Core;
 
 class BindHashing{
 

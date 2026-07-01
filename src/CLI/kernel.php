@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
-namespace Src\CLI;
+namespace Noga\CLI;
 
-use Src\CLI\Command\Command;
-use Src\CLI\Services\Init;
-use Src\CLI\Services\Render;
+use Noga\CLI\Command\Command;
+use Noga\CLI\Services\Init;
+use Noga\CLI\Services\Render;
 use Test\Test;
 
 class kernel{

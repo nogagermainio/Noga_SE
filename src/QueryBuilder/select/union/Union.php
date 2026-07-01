@@ -1,9 +1,8 @@
 <?php
-namespace Src\QueryBuilder\Select\Union;
+namespace Noga\QueryBuilder\Select\Union;
 
-use Src\QueryBuilder\Builder;
-use Src\QueryBuilder\Select\Select;
-use Src\Sql;
+use Noga\QueryBuilder\Builder;
+use Noga\QueryBuilder\Select\Select;
 class Union
 {
     /**

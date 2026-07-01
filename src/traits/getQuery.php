@@ -1,5 +1,5 @@
 <?php
-namespace Src\Traits;
+namespace Noga\Traits;
 
 use Generator;
 

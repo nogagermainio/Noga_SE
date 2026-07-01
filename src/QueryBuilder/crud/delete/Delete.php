@@ -1,10 +1,10 @@
-<?php
-namespace Src\QueryBuilder\Crud\Delete;
+<?php declare(strict_types=1);
+namespace Noga\QueryBuilder\Crud\Delete;
 use PDOException;
 use PDOStatement;
 use RuntimeException;
-use Src\Traits\Condition;
-use Src\Traits\DbTrait;
+use Noga\Traits\Condition;
+use Noga\Traits\DbTrait;
 
 class Delete
 {
@@ -39,7 +39,7 @@ class Delete
         if(empty($this->conditions)) throw new RuntimeException("Cannot use delete if conditions is empty ");
         $this->sql .= " WHERE {$conditions} ";
         if($this->limit !== null) $this->sql .= " LIMIT {$this->limit} ";
-        
+
         return $this->sql;
     }
 

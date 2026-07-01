@@ -1,10 +1,10 @@
 <?php
-namespace Src\CLI\Services;
+namespace Noga\CLI\Services;
 
 use PDO;
 use PDOException;
 use RuntimeException;
-use Src\Noga;
+use Noga\Noga;
 class DataInterprete{
     protected array $argv = [];
     protected const METHOD = [

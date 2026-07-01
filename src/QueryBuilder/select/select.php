@@ -1,22 +1,22 @@
 <?php
-namespace Src\QueryBuilder\Select;
+namespace Noga\QueryBuilder\Select;
 
-use Src\Core\CacheManager;
-use Src\QueryBuilder\Crud\Delete\Delete;
-use Src\QueryBuilder\Crud\Insert\Insert;
-use Src\QueryBuilder\Crud\Update\Update;
-use Src\QueryBuilder\Select\Case\Cases;
-use Src\QueryBuilder\Select\Join\Join;
-use Src\QueryBuilder\Select\Sub\Sub;
-use Src\QueryBuilder\Select\Union\Union;
-use Src\Traits\Aggregate;
-use Src\Traits\Condition;
-use Src\Traits\DbTrait;
-use Src\Traits\SelectAttr;
+use Noga\Core\CacheManager;
+use Noga\QueryBuilder\Crud\Delete\Delete;
+use Noga\QueryBuilder\Crud\Insert\Insert;
+use Noga\QueryBuilder\Crud\Update\Update;
+use Noga\QueryBuilder\Select\Case\Cases;
+use Noga\QueryBuilder\Select\Join\Join;
+use Noga\QueryBuilder\Select\Sub\Sub;
+use Noga\QueryBuilder\Select\Union\Union;
+use Noga\Traits\AggregateTrait;
+use Noga\Traits\Condition;
+use Noga\Traits\DbTrait;
+use Noga\Traits\SelectAttr;
 
 class Select{
     use SelectAttr;
-    use Aggregate;
+    use AggregateTrait;
     use DbTrait;
     use Condition;
 

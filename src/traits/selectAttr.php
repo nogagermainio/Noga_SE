@@ -1,9 +1,9 @@
 <?php
-namespace Src\Traits;
+namespace Noga\Traits;
 
-use Src\QueryBuilder\Builder;
-use Src\QueryBuilder\Select\Join\Join;
-use Src\QueryBuilder\Select\Union\Union;
+use Noga\QueryBuilder\Builder;
+use Noga\QueryBuilder\Select\Join\Join;
+use Noga\QueryBuilder\Select\Union\Union;
 
 trait SelectAttr{
      /**

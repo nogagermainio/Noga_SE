@@ -1,12 +1,11 @@
 <?php
-namespace Src;
+namespace Noga;
 
-use Src\End\Sql;
-use Src\Facade\Facade;
-use Src\QueryBuilder\Crud\Delete\Delete;
-use Src\QueryBuilder\Crud\Insert\Insert;
-use Src\QueryBuilder\Crud\Update\Update;
-use Src\QueryBuilder\Select\Select;
+use Noga\Facade\Facade;
+use Noga\QueryBuilder\Crud\Delete\Delete;
+use Noga\QueryBuilder\Crud\Insert\Insert;
+use Noga\QueryBuilder\Crud\Update\Update;
+use Noga\QueryBuilder\Select\Select;
 
 /**
  * Summary of Noga design pattern static 

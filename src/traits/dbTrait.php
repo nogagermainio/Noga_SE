@@ -1,14 +1,13 @@
-<?php
-namespace Src\Traits;
+<?php declare(strict_types=1);
+namespace Noga\Traits;
 
 use PDOStatement;
 use RuntimeException;
-use Src\Sql;
-use Src\Core\CacheManager;
-use Src\Db\Db;
-use Src\Db\MySQL;
-use Src\Db\Postgres;
-use Src\Db\Sqlite;
+use Noga\Core\CacheManager;
+use Noga\Db\Db;
+use Noga\Db\MySQL;
+use Noga\Db\Postgres;
+use Noga\Db\Sqlite;
 
 
 trait DbTrait{

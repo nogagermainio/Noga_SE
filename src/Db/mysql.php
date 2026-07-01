@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
-namespace Src\Db;
+namespace Noga\Db;
 
-use Src\Db\DB;
+use Noga\Db\DB;
 class MySQL extends DB{
     public function __construct(protected string $database = '')
     {
