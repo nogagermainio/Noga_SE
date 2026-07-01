@@ -1,4 +1,4 @@
-# 🗄️ Noga_SE - Modern SQL QueryBuilder version : 1.0
+# 🗄️ Noga_SE - Modern SQL QueryBuilder
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![PHP](https://img.shields.io/badge/PHP-8.1+-green.svg)](https://php.net)
