@@ -1,13 +1,13 @@
 <?php
-namespace Src\Schema;
+namespace Noga\Schema;
 
 use PDOException;
 use RuntimeException;
-use Src\StateBuilder\QueryState;
+use Noga\StateBuilder\QueryState;
 class Schema
 {
-   use \Src\Traits\DbTrait;
-   use \Src\Schema\AlterTable;
+   use \Noga\Traits\DbTrait;
+   use \Noga\Schema\AlterTable;
     protected mixed $creates = null;
     protected string $table = '';
     protected bool $notExist;

@@ -1,5 +1,5 @@
 <?php
-namespace Test;
+namespace Noga\Tests;
 use PHPUnit\Framework\TestCase;
 use Noga\Noga;
 

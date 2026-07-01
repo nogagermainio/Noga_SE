@@ -1,8 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Src\StateBuilder;
-
-use RuntimeException;
+namespace Noga\StateBuilder;
 
 class QueryState{
     protected array $data = [];

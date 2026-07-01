@@ -2,9 +2,9 @@
 namespace Noga\Db;
 
 use PDO;
-use Noga\Db\DB;
+use Noga\Db\Db;
 
-class Sqlite extends DB
+class Sqlite extends Db
 {
     public function __construct(protected string $database = '')
     {

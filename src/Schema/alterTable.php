@@ -1,6 +1,6 @@
 <?php
-namespace Src\Schema;
-use Src\Schema\Alter;
+namespace Noga\Schema;
+use Noga\Schema\Alter;
 
 trait AlterTable{
     protected string $alter = "";

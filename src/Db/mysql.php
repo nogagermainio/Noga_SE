@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 namespace Noga\Db;
 
-use Noga\Db\DB;
-class MySQL extends DB{
+use Noga\Db\Db;
+class Mysql extends Db{
     public function __construct(protected string $database = '')
     {
             $this->driver = ng('MY_DRIVER') ?? 'mysql';

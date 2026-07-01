@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 namespace Noga\Db;
 
-use Noga\Db\DB;
+use Noga\Db\Db;
 
-class Postgres extends DB
+class Postgres extends Db
 {
     public function __construct(protected string $database = '')
     {

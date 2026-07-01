@@ -116,9 +116,9 @@ class Command
                 }
 
                 $this->class[] = $class;
-                $this->command[$name] = $class;
+                $this->command[$name] = (\str_starts_with($class,'Tests')) ? "Noga\\$class" : str_replace('Src','Noga',$class);
                  
-            }       
+            }      
 
         }
          return $this;

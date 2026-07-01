@@ -4,9 +4,9 @@ namespace Noga\CLI;
 use Noga\CLI\Command\Command;
 use Noga\CLI\Services\Init;
 use Noga\CLI\Services\Render;
-use Test\Test;
+use Noga\Tests\Test;
 
-class kernel{
+class Kernel{
    private array $argv = [];
    private array $command = [
     '-h'=>'help',

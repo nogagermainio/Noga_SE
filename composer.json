@@ -8,7 +8,7 @@
   "authors": [
     {
       "name": "nogagermainio",
-      "email": "contact@nogagermainio.dev"
+      "email": "nogagerma122@gmail.com"
     }
   ],
 
@@ -27,8 +27,12 @@
 
   "autoload-dev": {
     "psr-4": {
-      "Noga\\Tests\\": "test/"
+      "Noga\\Tests\\": "tests/"
     }
+  },
+
+  "require-dev": {
+    "phpunit/phpunit": "^10.0"
   },
 
   "minimum-stability": "stable",
@@ -36,18 +40,11 @@
 
   "config": {
     "optimize-autoloader": true,
-    "sort-packages": true,
-    "allow-plugins": {
-      "php-http/discovery": true
-    }
+    "sort-packages": true
   },
 
   "scripts": {
     "test": "phpunit",
     "dump": "composer dump-autoload -o"
-  },
-
-  "require-dev": {
-    "phpunit/phpunit": "^13.2.2"
   }
 }

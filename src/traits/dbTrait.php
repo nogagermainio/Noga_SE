@@ -1,25 +1,25 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 namespace Noga\Traits;
 
-use PDOStatement;
-use RuntimeException;
 use Noga\Core\CacheManager;
 use Noga\Db\Db;
-use Noga\Db\MySQL;
+use Noga\Db\Mysql;
 use Noga\Db\Postgres;
 use Noga\Db\Sqlite;
+use PDOStatement;
+use RuntimeException;
 
-
-trait DbTrait{
+trait DbTrait
+{
     protected string $driver = "mysql";
-    protected PDOStatement $stmt; 
-    protected const DRIVER   = [
+    protected PDOStatement $stmt;
+    protected array $driverList = [
         "mysql",
         "sqlite",
         "pgsql",
     ];
 
-      /**
+    /**
      * Summary of db
      * @var Db
      */
@@ -27,26 +27,25 @@ trait DbTrait{
 
     private string $cacheDir = "sql";
 
-
-     /**
+    /**
      * Summary of driver
      * @param string $driver
      * @param string $database
      * @return static
      */
-    public function driver(string $driver, string $database = ""):static
+    public function driver(string $driver, string $database = ""): static
     {
         $clone         = clone $this;
         $clone->driver = $driver;
 
-        if (! \in_array($driver, self::DRIVER)) {
+        if (! \in_array($driver, $this->driverList)) {
             throw new RuntimeException("error your driver {$driver} is not supported ! ");
         }
 
         $clone->driver = strtolower($clone->driver);
 
         if ($clone->driver === "mysql") {
-            $clone->db = new MySQL($database);
+            $clone->db = new Mysql($database);
             return $clone;
 
         } else if ($clone->driver === "sqlite") {
@@ -67,13 +66,13 @@ trait DbTrait{
     private function db(): ?Db
     {
         if ($this->db === null) {
-            $this->db = new MySQL();
+            $this->db = new Mysql();
         }
         return $this->db;
     }
 
-
-     private function cache(string $key):CacheManager{
+    private function cache(string $key): CacheManager
+    {
         return CacheManager::key($key)->dir($this->cacheDir);
     }
 }

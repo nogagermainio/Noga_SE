@@ -1,6 +1,7 @@
 <?php
-namespace Src\Mapping;
-use Src\Noga;
+namespace Noga\Mapping;
+use Noga\Noga;
+use Noga\QueryBuilder\Select\Select;
 
 abstract class Form {
     protected array $attributes = [];
@@ -15,9 +16,9 @@ abstract class Form {
     /**
      * Summary of sql
      * @param string|callable|null $table
-     * @return \Src\Sql
+     * @return Select
      */
-    public static function sql(string|callable|null $table = null):\Src\Sql{
+    public static function sql(string|callable|null $table = null):Select{
          return Noga::table($table ?? static::$table); 
         }
 
@@ -74,11 +75,15 @@ abstract class Form {
     // Save / Update
     public function save() {
         if (isset($this->attributes['id'])) {
-            return static::sql()->where(['id' => $this->attributes['id']])
-                       ->set_cols($this->attributes)
-                       ->Update();
+            return static::sql()->update($this->attributes['table'])
+                       ->where(['id' => $this->attributes['id']])
+                       ->set($this->attributes)
+                       ->exec();
         }
-        return static::sql()->Columns($this->attributes)->insert();
+        return static::sql()->insert($this->attributes['table'])
+        ->columns($this->attributes['columns'])
+        ->values($this->attributes['values'])
+        ->exec();
     }
 
     // CTE récursif ou standard avec collection

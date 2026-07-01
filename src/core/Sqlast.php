@@ -1,5 +1,5 @@
 <?php
-namespace Src\Core;
+namespace Noga\Core;
 
 use RuntimeException;
 

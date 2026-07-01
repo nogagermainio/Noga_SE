@@ -1,5 +1,5 @@
 <?php
-namespace Test;
+namespace Noga\Tests;
 
 use Noga\CLI\Services\Render;
 use Noga\Noga;

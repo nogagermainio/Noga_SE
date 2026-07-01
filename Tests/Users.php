@@ -1,6 +1,6 @@
 <?php
-
-class Sqlast
+namespace Noga\Tests;
+class Users
 {
     public function lexer(string $sql): array
     {

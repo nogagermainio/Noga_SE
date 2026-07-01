@@ -1,10 +1,10 @@
 <?php
-namespace Src\Schema;
+namespace Noga\Schema;
 
-use Src\Sql;
 use InvalidArgumentException;
+use Noga\QueryBuilder\Select\Select;
 use RuntimeException;
-use Src\Schema\Schema;
+use Noga\Schema\Schema;
 
 class Alter{
     private array $column = [];
@@ -88,7 +88,7 @@ class Alter{
         return $clone;
     }
 
-    public function add_Foreign(string $cols,callable|Sql $callback){
+    public function add_Foreign(string $cols,callable|Select $callback){
         $clone = clone $this;
         if ($callback instanceof Schema) {
             $clone->column[] = " ADD ".$callback->buildForeignKey($cols);
