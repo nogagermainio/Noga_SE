@@ -4,6 +4,10 @@
 [![PHP](https://img.shields.io/badge/PHP-8.1+-green.svg)](https://php.net)
 [![Composer](https://img.shields.io/badge/Composer-Ready-brightgreen.svg)](https://packagist.org)
 
+![Status](https://img.shields.io/badge/status-active-success?style=for-the-badge)
+![Type](https://img.shields.io/badge/type-querybuilder-important?style=for-the-badge)
+![Architecture](https://img.shields.io/badge/architecture-immutable-black?style=for-the-badge)
+
 ![MySQL](https://img.shields.io/badge/MySQL-supported-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-supported-336791?style=for-the-badge&logo=postgresql&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-supported-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
