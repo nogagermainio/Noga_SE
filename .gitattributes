@@ -1,10 +1,28 @@
-.github/ export-ignore
-Tests/ export-ignore
-docs/ export-ignore
-examples/ export-ignore
-phpunit.xml export-ignore
-.gitignore export-ignore
-.vscode export-ignore
-.phpunit.cache export-ignore
-membres_msbc.json export-ignore
-membres_msbc.json export-ignore
+# Normalize text files
+* text=auto
+
+# Development files
+/.github export-ignore
+/.vscode export-ignore
+/.idea export-ignore
+
+# Tests
+/tests export-ignore
+/phpunit.xml export-ignore
+/.phpunit.cache export-ignore
+
+# Documentation (si tu ne souhaites pas l'inclure)
+#/docs export-ignore
+
+# Examples (si tu ne souhaites pas les distribuer)
+/examples export-ignore
+
+# Git files
+/.gitignore export-ignore
+/.gitattributes export-ignore
+
+# Local data
+/membres_msbc.json export-ignore
+
+# CI / Misc
+/.editorconfig export-ignore
