@@ -12,13 +12,13 @@
 
     <testsuites>
         <testsuite name="Builder SQL Suite">
-            <directory>./test</directory>
+            <directory>./Tests</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory suffix=".php">test</directory>
+            <directory suffix=".php">Tests</directory>
         </whitelist>
     </filter>
 

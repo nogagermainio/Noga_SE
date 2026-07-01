@@ -2,12 +2,12 @@
 <phpunit bootstrap="vendor/autoload.php" colors="true" stopOnFailure="false" backupGlobals="false" cacheDirectory=".phpunit.cache" backupStaticProperties="false">
   <testsuites>
     <testsuite name="Builder SQL Suite">
-      <directory>./test</directory>
+      <directory>./Tests</directory>
     </testsuite>
   </testsuites>
   <source>
     <include>
-      <directory suffix=".php">test</directory>
+      <directory suffix=".php">Tests</directory>
     </include>
   </source>
 </phpunit>

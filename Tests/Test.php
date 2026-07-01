@@ -36,7 +36,35 @@ class Test{
     $de = Noga::delete('users')
     ->where(['status' => 'inactive', 'last_login <' => '2023-01-01'])
     ->viewState();
+
+     $builder = Noga::with(
+        "categories",
+        Noga::table("categories", "c")
+            ->select("id", "parent_id", "name")
+            ->unionAll(Noga::u()
+                ->from("categories")
+                  ->select("id", "parent_id", "name")
+            )
+    ,true)
+    ->table("products", "p")
+    ->select("id", "name", "category_id")
+      ->where(["active" => 1])->getQuery();
      
-        Render::data($de)->json();
+        Render::data($builder)->json();
     } 
 }
+
+/**
+ *   "WITH RECURSIVE categories AS (
+ * SELECT id,parent_id,name FROM categories AS c 
+ *  UNION ALL  SELECT  id,parent_id,name FROM categories 
+ *  )
+ *  SELECT id,name,category_id FROM products AS p  WHERE active = :wh_72e31f89_active "
+ */
+
+// WITH RECURSIVE categories AS (
+//     SELECT id,parent_id,name FROM categories AS c
+//     UNION ALL
+//     SELECT id,parent_id,name FROM categories
+// )
+// SELECT id,name,category_id FROM products AS p WHERE active = :wh_
