@@ -7,6 +7,7 @@ All notable changes to Noga_SE will be documented in this file.
 ## [1.0.0] - 2026-07-01
 
 ### Added
+
 - Fluent SQL Query Builder (SELECT, INSERT, UPDATE, DELETE)
 - Immutable query architecture (safe cloning system)
 - Automatic parameter binding (SQL injection protection)
@@ -23,12 +24,14 @@ All notable changes to Noga_SE will be documented in this file.
 - Multi-driver architecture (MySQL, PostgreSQL, SQLite ready)
 
 ### Security
+
 - Fully parameterized queries
 - No direct SQL concatenation
 - Protected dynamic bindings
 - Safe immutability layer
 
 ### Infrastructure
+
 - PSR-4 autoloading (Noga\ namespace)
 - Composer-ready package
 - PHPUnit test structure initialized
@@ -37,6 +40,7 @@ All notable changes to Noga_SE will be documented in this file.
 ---
 
 ## [Unreleased]
+
 - Query profiler
 - Migration system
 - Schema builder
