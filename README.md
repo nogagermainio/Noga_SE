@@ -8,6 +8,10 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-supported-336791?style=for-the-badge&logo=postgresql&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-supported-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
 
+![Security](https://img.shields.io/badge/security-sql_injection_safe-green?style=for-the-badge)
+![Performance](https://img.shields.io/badge/performance-optimized-orange?style=for-the-badge)
+![Style](https://img.shields.io/badge/api-fluent%20builder-blueviolet?style=for-the-badge)
+
 ![Stars](https://img.shields.io/github/stars/nogagermainio/Noga_SE?style=for-the-badge)
 ![Forks](https://img.shields.io/github/forks/nogagermainio/Noga_SE?style=for-the-badge)
 ![Issues](https://img.shields.io/github/issues/nogagermainio/Noga_SE?style=for-the-badge)
