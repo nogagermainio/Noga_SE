@@ -27,18 +27,21 @@
 ## ✨ Key Features
 
 ### 🔧 Complete CRUD Operations
+
 - **SELECT** - Complex queries with joins, subqueries, aggregations, CTEs
 - **INSERT** - Single and batch insertions with secure binding
 - **UPDATE** - Safe updates with WHERE conditions
 - **DELETE** - Protected deletions with conditions
 
 ### 🛡️ Advanced Security
+
 - **Parameter Binding** - Automatic binding prevents SQL injections
 - **BindHashing** - Cryptographically random parameter keys (`:prefix_hexrand_colname`)
 - **Immutability** - Automatic cloning prevents mutations
 - **Type Safety** - Strict type checking with exceptions
 
 ### ⚙️ Powerful Features
+
 - **Complex WHERE Clauses** - AND, OR, LIKE, BETWEEN, IN, EXISTS, NOT IN
 - **Joins** - INNER, LEFT, RIGHT, CROSS joins with multiple tables
 - **Subqueries** - Nested queries via callables, Select instances, or strings
@@ -49,6 +52,7 @@
 - **Query Caching** - Reuse compiled queries efficiently
 
 ### 🔗 Fluent API
+
 ```php
 $query = Noga::table('users')
     ->select('id', 'name', 'email')
@@ -58,6 +62,7 @@ $query = Noga::table('users')
 ```
 
 ### 🎨 Design Patterns
+
 - **Facade Pattern** - Unified static API
 - **Builder Pattern** - Chainable query construction
 - **Immutable Pattern** - Safe object cloning
@@ -66,10 +71,11 @@ $query = Noga::table('users')
 
 ---
 
-
 ### Manual Installation
+
 1. Clone the repository
 2. Configure autoloading in `composer.json`:
+
 ```json
 {
   "autoload": {
@@ -87,6 +93,7 @@ $query = Noga::table('users')
 ### 1️⃣ SELECT - Reading Data
 
 #### Basic Query
+
 ```php
 use Noga\Noga;
 
@@ -96,6 +103,7 @@ $users = Noga::table('users')
 ```
 
 #### With Conditions
+
 ```php
 $activeUsers = Noga::table('users')
     ->select('*')
@@ -104,6 +112,7 @@ $activeUsers = Noga::table('users')
 ```
 
 #### With Joins
+
 ```php
 $userPosts = Noga::table('users')
     ->select('users.name', 'posts.title')
@@ -113,6 +122,7 @@ $userPosts = Noga::table('users')
 ```
 
 #### With Subqueries
+
 ```php
 $topUsers = Noga::table('users')
     ->select('id', 'name')
@@ -125,6 +135,7 @@ $topUsers = Noga::table('users')
 ```
 
 #### With Aggregations
+
 ```php
 $stats = Noga::table('orders')
     ->select('user_id', 'COUNT(*) as total_orders')
@@ -134,6 +145,7 @@ $stats = Noga::table('orders')
 ```
 
 #### With Sorting & Pagination
+
 ```php
 $topUsers = Noga::table('users')
     ->select('*')
@@ -145,7 +157,7 @@ $topUsers = Noga::table('users')
 
 ### 2️⃣ INSERT - Creating Data
 
-Executing mode : 
+Executing mode :
 
 ```php
 ->exec(); //interact with database
@@ -155,6 +167,7 @@ Executing mode :
 ```
 
 #### Single Insertion
+
 ```php
 use Noga\Noga;
 
@@ -165,6 +178,7 @@ $result = Noga::insert('users')
 ```
 
 #### bulk Insertions
+
 ```php
 $result = Noga::insert('users')
     ->from(__DIR__."/../membres.json")
@@ -180,6 +194,7 @@ $result = Noga::insert('users')
 ```
 
 #### Debug Insertion
+
 ```php
 $debug = Noga::insert('users')
     ->columns('name', 'email')
@@ -220,6 +235,7 @@ execution mode :
 ```
 
 #### Simple Update
+
 ```php
 $result = Noga::update('users')
     ->set(['status' => 'active', 'updated_at' => 'NOW()'])
@@ -228,6 +244,7 @@ $result = Noga::update('users')
 ```
 
 #### Update with Complex Conditions
+
 ```php
 $result = Noga::update("users")
           ->set(['verified' => true])
@@ -239,6 +256,7 @@ $result = Noga::update("users")
 ```
 
 ### 4️⃣ DELETE - Removing Data
+
 execution mode :
 
 ```php
@@ -247,7 +265,9 @@ execution mode :
 ->getParams(); //get all params binding
 ->viewState(); // show request 
 ```
+
 #### Simple Deletion
+
 ```php
 $result = Noga::delete('users')
     ->where(['id' => 1])
@@ -255,6 +275,7 @@ $result = Noga::delete('users')
 ```
 
 #### Safe Deletion with Limits
+
 ```php
 $result = Noga::delete('users')
     ->where(['status' => 'inactive', 'last_login <' => '2023-01-01'])
@@ -281,6 +302,7 @@ $result = Noga::delete('users')
 ### SELECT Methods
 
 #### Column Selection
+
 ```php
 ->select('id', 'name', 'email')           // Specific columns
 ->select('*')                             // All columns
@@ -291,6 +313,7 @@ $result = Noga::delete('users')
 ```
 
 #### WHERE Clauses
+
 ```php
 ->where(['id' => 1, 'status' => 'active'])              // AND condition
 ->whereOr(['status' => 'pending', 'status' => 'draft']) // OR condition
@@ -306,6 +329,7 @@ $result = Noga::delete('users')
 ```
 
 #### Joins
+
 ```php
 ->innerJoin(Noga::j('posts', 'p')
     ->on('users.id', '=', 'p.user_id'))
@@ -320,12 +344,14 @@ $result = Noga::delete('users')
 ```
 
 #### Grouping & Aggregation
+
 ```php
 ->groupBy(['status', 'created_at'])
 ->having(['count >' => 5])
 ```
 
 #### Sorting & Pagination
+
 ```php
 ->orderBy('created_at', 'DESC')  // ASC or DESC
 ->limit(10)                       // Limit results
@@ -333,6 +359,7 @@ $result = Noga::delete('users')
 ```
 
 #### Unions
+
 ```php
 
 //union simple 
@@ -351,6 +378,7 @@ $result = Noga::delete('users')
 ```
 
 #### CTEs (Common Table Expressions)
+
 ```php
 ->with('recent_users', 
     fn($q) => $q->table('users')
@@ -366,6 +394,7 @@ $result = Noga::delete('users')
 ```
 
 #### Execution Methods
+
 ```php
 ->get()                    // All results as objects
 ->getOne()                 // Single row
@@ -417,6 +446,7 @@ src/
 ## 🔒 Security in Depth
 
 ### Parameter Binding (SQL Injection Prevention)
+
 ```php
 // ❌ UNSAFE - Vulnerable to SQL injection
 $query = "SELECT * FROM users WHERE id = $id";
@@ -428,6 +458,7 @@ $query = Noga::table('users')
 ```
 
 ### BindHashing Mechanism
+
 ```
 Parameter Key Generation:
 Input: ['id' => 5, 'status' => 'active']
@@ -447,6 +478,7 @@ Each key is:
 ```
 
 ### Immutability for Safety
+
 ```php
 $base = Noga::table('users');
 $active = $base->where(['status' => 'active']);
@@ -461,6 +493,7 @@ $admins = $base->where(['role' => 'admin']);
 ## 🧪 Testing
 
 ### Run Tests
+
 ```bash
 # Unix/Linux/Mac
 ./noga test
@@ -470,11 +503,13 @@ noga.bat test
 ```
 
 ### Test Files
+
 - `test/NogaTest.php` - PHPUnit test suite
 - `test/test.php` - Basic examples
 - `test/users.php` - User table examples
 
 ### Test Configuration
+
 ```xml
 <!-- phpunit.xml -->
 <phpunit bootstrap="vendor/autoload.php">
@@ -491,6 +526,7 @@ noga.bat test
 ## 💡 Advanced Examples
 
 ### Complex Multi-Level Query
+
 ```php
 $results = Noga::table('orders')
     ->select(
@@ -515,6 +551,7 @@ $results = Noga::table('orders')
 ```
 
 ### Recursive CTE
+
 ```php
 $hierarchy = Noga::table('categories')
     ->with('category_tree', 
@@ -539,6 +576,7 @@ $hierarchy = Noga::table('categories')
 ```
 
 ### Query Caching
+
 ```php
 // Register query
 Noga::table('users')
@@ -555,6 +593,7 @@ Noga::removeAllCache();
 ```
 
 ### EXPLAIN Query Analysis
+
 ```php
 $analysis = Noga::explain(
     Noga::table('users')
@@ -569,6 +608,7 @@ $analysis = Noga::explain(
 ## 🔧 Configuration
 
 ### Database Configuration
+
 Configure via `NgManager` or environment file:
 
 ```php
@@ -581,6 +621,7 @@ $port = ng('db_port', 3306);
 ```
 
 ### Cache Configuration
+
 ```php
 CacheManager::key("my_query")
     ->dir("queries")
@@ -613,6 +654,7 @@ Contributions are welcome! Please follow these steps:
 5. Open a Pull Request
 
 ### Development Setup
+
 ```bash
 # Clone repository
 git clone https://github.com/nogagermainio/Noga_SE.git
@@ -694,6 +736,7 @@ A: Fork the repo, create a feature branch, and submit a pull request.
 ## 📊 Roadmap
 
 ### ✅ Completed
+
 - [x] SELECT with advanced clauses
 - [x] INSERT with secure binding
 - [x] UPDATE with conditions
@@ -706,12 +749,14 @@ A: Fork the repo, create a feature branch, and submit a pull request.
 - [x] Query caching
 
 ### 🔄 In Progress
+
 - [ ] Enhanced error reporting
 - [ ] Performance profiling
 - [ ] Query optimization hints
 - [ ] Additional database drivers
 
 ### 📋 Planned
+
 - [ ] Trigger & stored procedure support
 - [ ] Database schema builders
 - [ ] Migration system
@@ -724,26 +769,31 @@ A: Fork the repo, create a feature branch, and submit a pull request.
 ## 📈 Performance Tips
 
 1. **Use Pagination** - Limit large result sets
+
    ```php
    ->limit(20)->offset($page * 20)
    ```
 
 2. **Cache Frequently Used Queries** - Reuse compiled queries
+
    ```php
    ->add_query('active_users')
    ```
 
 3. **Use Indexes** - Create database indexes on WHERE columns
+
    ```sql
    CREATE INDEX idx_status ON users(status);
    ```
 
 4. **Batch Operations** - Insert multiple rows at once
+
    ```php
    ->values(...)->values(...)->values(...)
    ```
 
 5. **Select Only Needed Columns** - Avoid SELECT *
+
    ```php
    ->select('id', 'name', 'email')  // Not SELECT *
    ```
