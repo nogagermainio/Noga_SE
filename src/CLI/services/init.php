@@ -2,6 +2,7 @@
 namespace Noga\CLI\Services;
 
 use Noga\CLI\Services\Render;
+use Noga\Noga;
 
 class Init
 {
@@ -14,7 +15,7 @@ class Init
     public function init()
     {   
         
-        $dir = __DIR__ .'/../../../ENV/';
+        $dir = Noga::get("base_path") .'/Config/';
         $file = "{$dir}ngconfig.ng";
 
            if($this->argv[2] === "--dump"){
@@ -85,22 +86,52 @@ public static function boot(array $command = []){
 } 
 
 public static function fileContent(string $name){
-    return '# ng-config v0.1.0
+    return '# ng-config v0.1.1
 # Configuration file for the mini-framework noga application
 # Database settings
 # Adjust these settings according to your environment
 
-string DB_HOST = "127.0.0.1"
+#  ============= mysql
+string DB_HOST = "localhost"
 int DB_PORT = 3306
-# Database connection settings name of users
-string DB_USERSNAME = "root"
-string DB_PASSWORD = ""
-string DB_DATABASE = "msbc"
-string DB_DRIVER = "mysql"
-string DB_CHARSET = "utf8mb4"
-string DB_COLLATION = "utf8mb4_unicode_ci"
 
-array DB_OPTIONS = [
+#  ============ Database connection settings name of users
+
+string MY_USERSNAME = "root"
+string MY_PASSWORD = ""
+string MY_DATABASE = "msbc"
+string MY_DRIVER = "mysql"
+string MY_CHARSET = "utf8mb4"
+string MY_COLLATION = "utf8mb4_unicode_ci"
+
+array MY_OPTIONS = [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES => false
+]
+
+# ================= Database Sqlite connection settings config
+
+string Lite_driver = "sqlite"
+string Lite_db = "Sqlite.db"
+string Lite_foreign_keys = "PRAGMA foreign_keys = ON"
+array Lite_option = [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES => false
+]
+
+# ================== Database postgreSQL connection  settings config
+
+string PG_HOST = "localhost"
+int PG_PORT = 5432
+string PG_USERSNAME = "postgres"
+string PG_PASSWORD = "426513"
+string PG_DATABASE = "postgres"
+string PG_DRIVER = "pgsql"
+string PG_CHARSET = "UTF-8"
+
+array PG_OPTIONS = [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     PDO::ATTR_EMULATE_PREPARES => false

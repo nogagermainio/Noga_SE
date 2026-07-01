@@ -1,14 +1,38 @@
 <?php
-require "vendor/autoload.php";
+
+$autoload = [
+    __DIR__."/../../autoload.php",
+    __DIR__."/../autoload.php",
+    __DIR__."/autoload.php",
+    __DIR__."/vendor/autoload.php"
+];
+
+foreach($autoload as $file){
+    if(file_exists($file)){
+        define("COMPOSER_INSTALL",$file);
+    }
+
+}
+unset($file);
+
+require COMPOSER_INSTALL;
 
 use Noga\CLI\Command\Command;
 use Noga\Core\NgManager;
 use Noga\CLI\kernel;
+use Noga\Noga;
 
 NgManager::getInstance(__DIR__."/Config/ngconfig.ng");
 
+Noga::config(
+    __DIR__,
+    __DIR__."/src/cache",
+    'pgsql'
+);
+
 if(PHP_SAPI === 'cli'){
     Command::get(["src","tests"]);
+
 
 Kernel::run($argv);
 exit(0);

@@ -19,13 +19,48 @@ use Noga\QueryBuilder\Select\Select;
  */
 final class Noga extends Facade
 {
-    public function getProcessClass(): array
+     private static array $config = [
+        'base_path' => '',
+        'cache_path' => '',
+        'driver' => 'mysql',
+    ];
+
+ /**
+  * Summary of config
+  * @param string $basePath `__DIR__`
+  * @param string $cachePath 
+  * @param string $driver 
+  * @return void
+  */
+ public static function config(
+        string $basePath,
+        string $cachePath,
+        string $driver = 'mysql'
+    ): void {
+        self::$config = [
+            'base_path' => rtrim($basePath, DIRECTORY_SEPARATOR),
+            'cache_path' => rtrim($cachePath, DIRECTORY_SEPARATOR),
+            'driver'     => strtolower($driver),
+        ];
+    }
+
+    /**
+     * Summary of get
+     * @var array{base_path:string,cache_path:string,driver:string}
+     * @param string $key
+     * @return mixed
+     */
+    public static function get(string $key): ?string
+    {
+       
+        return self::$config[$key] ?? null;
+    }
+
+  public function getProcessClass(): array
     {
         return [
            Select::class
         ];
     } 
-
-  
   
 }

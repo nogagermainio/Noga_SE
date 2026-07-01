@@ -50,7 +50,8 @@ class Test{
     ->select("id", "name", "category_id")
       ->where(["active" => 1])->getQuery();
      
-        Render::data($builder)->json();
+    
+        Render::data($in)->json();
     } 
 }
 

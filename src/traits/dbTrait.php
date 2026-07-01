@@ -6,12 +6,13 @@ use Noga\Db\Db;
 use Noga\Db\Mysql;
 use Noga\Db\Postgres;
 use Noga\Db\Sqlite;
+use Noga\Noga;
 use PDOStatement;
 use RuntimeException;
 
 trait DbTrait
 {
-    protected string $driver = "mysql";
+    protected string $driver;
     protected PDOStatement $stmt;
     protected array $driverList = [
         "mysql",
@@ -26,7 +27,6 @@ trait DbTrait
     private ?Db $db = null;
 
     private string $cacheDir = "sql";
-
     /**
      * Summary of driver
      * @param string $driver

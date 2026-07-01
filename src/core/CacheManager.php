@@ -2,6 +2,7 @@
 namespace Noga\Core;
 
 use Generator;
+use Noga\Noga;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RuntimeException;
@@ -15,10 +16,11 @@ class CacheManager
     private string $path;
     private ?string $debug = null;
     private ?int $delay    = null;
-    private string $basePath = __DIR__ . "/../../src/cache";
+    private ?string $basePath;
 
     public function __construct(string | array $key = "")
     {
+        $this->basePath = Noga::get("cache_path") ?: __DIR__ . "/../../src/cache";
         $this->path      = $this->basePath;
         $this->key       = $key;
         $this->data      = null;
