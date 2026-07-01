@@ -1,7 +1,7 @@
 <?php
 namespace Src\Traits;
 
-
+use PDOStatement;
 use RuntimeException;
 use Src\Sql;
 use Src\Core\CacheManager;
@@ -13,6 +13,7 @@ use Src\Db\Sqlite;
 
 trait DbTrait{
     protected string $driver = "mysql";
+    protected PDOStatement $stmt; 
     protected const DRIVER   = [
         "mysql",
         "sqlite",

@@ -1,10 +1,15 @@
 <?php
-namespace Src\QueryBuilder;
+namespace Src\QueryBuilder\Select\Union;
 
+use Src\QueryBuilder\Builder;
+use Src\QueryBuilder\Select\Select;
 use Src\Sql;
-use Src\QueryBuilder\ClauseBuilder;
-class UnionBuilder
+class Union
 {
+    /**
+     * Summary of unions
+     * @var array
+     */
     public array $unions = [];
     protected array $table = [];
     protected array $columns = [];
@@ -15,12 +20,12 @@ class UnionBuilder
     protected bool $distinct = false;
     protected array $groups = [];
 
-    protected ?ClauseBuilder $clauseBuilder = null;
-    private ?Sql $sql = null;
+    protected ?Builder $clauseBuilder = null;
+    private ?Select $sql = null;
 
     public function __construct()
     {
-       $this->sql = new Sql();
+       $this->sql = new Select();
        $this->unions = [];
        
     }
@@ -38,7 +43,9 @@ class UnionBuilder
         $col = !empty($this->columns) ? $this->columns : $this->cols;
         $cols = !empty($col) ? $col : ["*"];
         $dist = $this->distinct ? "DISTINCT":"";
+
         $group = !empty($this->group) ? \implode(',',$this->groups) : "";
+
         foreach($this->table ?? [] as $table){
             $sql .= " UNION {$all}  SELECT {$dist} ".implode(",",$cols)." FROM {$table} {$group} ";
         }
@@ -51,56 +58,56 @@ class UnionBuilder
         
         return [$sql,$this->params];
     }
+
     /**
      * Summary of table
      * @param array $array
-     * @return UnionBuilder
+     * @return Union
      */
-    public function from(...$array):UnionBuilder{
+    public function from(string ...$array):Union{
         $clone = clone $this;
         $clone->table = $array;
         return $clone;
     }
+
     /**
-     * Summary of where
-     * @param array $conditions
-     * @return UnionBuilder
+     * Summary of groupBy
+     * @param array $array
+     * @return Union
      */
-    public function where(array $conditions):UnionBuilder{
-     $clone = clone $this;
-     $clone->conditions = $conditions;
-
-     return $clone;   
-    }
-
-    public function groupBy(array $array):UnionBuilder{
+    public function groupBy(array $array):Union{
         $clone = clone $this;
         $clone->groups[] = $array;
         return $clone;
     }
     /**
      * Summary of select
-     * @param array $columns
-     * @return UnionBuilder
+     * @param array<string> $columns
+     * @return Union
      */
-    public function select(...$columns):UnionBuilder{
+    public function select(string ...$columns):Union{
         $clone = clone $this;
         $clone->columns = $columns;
         return $clone;
     }
 
-    public function distinct(bool $distinct = false):UnionBuilder{
+    /**
+     * Summary of distinct
+     * @param bool $distinct
+     * @return Union
+     */
+    public function distinct(bool $distinct = false):Union{
         $clone = clone $this;
         $clone->distinct = $distinct;
         return $clone;
     }
 
-    public function add(array $row):UnionBuilder{
+    public function add(array $row):Union{
         $clone = clone $this;
         $state = [];
       foreach($row as $r){
-        if(\is_callable($r) || $r instanceof Sql){
-            $clone->rows[] = $r->getSql();
+        if(\is_callable($r) || $r instanceof Select){
+            $clone->rows[] = $r->getQuery();
             $clone->params = \array_merge($clone->params,$r->getParams());
 
         }else if(\is_string($r)){

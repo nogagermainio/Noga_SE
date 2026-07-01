@@ -1,10 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 namespace Src\QueryBuilder;
 
 use InvalidArgumentException;
-use Src\Sql;
+use Src\QueryBuilder\Select\Select;
 
-class AggregateBuilder
+class Aggregate
 {
     /**
      * Summary of function
@@ -22,17 +22,17 @@ class AggregateBuilder
      */
     private string $alias;
     /**
-     * Summary of sql
-     * @var Sql
+     * Summary of Select
+     * @var Select
      */
-    private Sql $sql;
+    private Select $sql;
 
     public function __construct()
     {
         $this->function = '';
         $this->columns = '';
         $this->alias = '';
-        $this->sql = new Sql();
+        $this->sql = new Select();
     }
 
     private function this()
@@ -43,11 +43,11 @@ class AggregateBuilder
 
     /**
      * Summary of count
-     * @param string|Sql|callable $value
+     * @param string|Select|callable $value
      * @param mixed $alias
      * @return string
      */
-    public function count(string|Sql|callable $value, ?string $alias = ''):string
+    public function count(string|Select|callable $value, ?string $alias = ''):string
     {
         $clone = $this->this();
         return $clone->agregate('COUNT', $value, $alias);
@@ -55,11 +55,11 @@ class AggregateBuilder
 
     /**
      * Summary of sum
-     * @param string|Sql|callable $value
+     * @param string|Select|callable $value
      * @param mixed $alias
      * @return string
      */
-    public function sum(string|Sql|callable $value, ?string $alias = ''):string
+    public function sum(string|Select|callable $value, ?string $alias = ''):string
     {
         $clone = $this->this();
         return $clone->agregate('SUM', $value, $alias);
@@ -67,11 +67,11 @@ class AggregateBuilder
 
     /**
      * Summary of avg
-     * @param string|Sql|callable $value
+     * @param string|Select|callable $value
      * @param mixed $alias
      * @return string
      */
-    public function avg(string|Sql|callable $value, ?string $alias = ''):string
+    public function avg(string|Select|callable $value, ?string $alias = ''):string
     {
         $clone = $this->this();
         return $clone->agregate('AVG', $value, $alias);
@@ -79,11 +79,11 @@ class AggregateBuilder
 
     /**
      * Summary of max
-     * @param string|Sql|callable $value
+     * @param string|Select|callable $value
      * @param mixed $alias
      * @return string
      */
-    public function max(string|Sql|callable $value, ?string $alias = ""):string
+    public function max(string|Select|callable $value, ?string $alias = ""):string
     {
         $clone = $this->this();
         return $clone->agregate('MAX', $value, $alias);
@@ -91,17 +91,17 @@ class AggregateBuilder
 
     /**
      * Summary of min
-     * @param string|Sql|callable $value
+     * @param string|Select|callable $value
      * @param mixed $alias
      * @return string
      */
-    public function min(string|Sql|callable $value, ?string $alias = ""):string
+    public function min(string|Select|callable $value, ?string $alias = ""):string
     {
         $clone = $this->this();
         return $clone->agregate('MIN', $value, $alias);
     }
 
-    public function coalesce(string|Sql|callable $value,string|int $concat, ?string $alias =""):string{
+    public function coalesce(string|Select|callable $value,string|int $concat, ?string $alias =""):string{
         $clone = $this->this();
        return $clone->agregate("COALESCE",$value,$alias,$concat);
     }
@@ -109,12 +109,12 @@ class AggregateBuilder
     /**
      * Summary of agregate
      * @param string $function
-     * @param string|Sql|callable $value
+     * @param string|Select|callable $value
      * @param mixed $alias
      * @throws InvalidArgumentException
      * @return string
      */
-    private function agregate(string $function, string|Sql|callable $value, ?string $alias = '',string|int $def = ""):string
+    private function agregate(string $function, string|Select|callable $value, ?string $alias = '',string|int $def = ""):string
     {
         $clone = $this->this();
         $clone->alias = !empty($alias) ? "AS $alias" : '';
@@ -123,13 +123,13 @@ class AggregateBuilder
         if (\is_callable($value)) {
             $values = $value($clone->sql);
 
-            $val = $values instanceof Sql ? $values : $values();
-            if (!($val instanceof Sql)) throw new InvalidArgumentException('the agregate callback return Sql');
+            $val = $values instanceof Select ? $values : $values();
+            if (!($val instanceof Select)) throw new InvalidArgumentException('the agregate callback return Select');
 
             if($function == "COALESCE"){
-                  $clone->columns = " $function({$val->getSql()},{$def}) {$clone->alias} ";
+                  $clone->columns = " $function({$val->getQuery()},{$def}) {$clone->alias} ";
             }else{
-                $clone->columns = " $function({$val->getSql()}) {$clone->alias} ";
+                $clone->columns = " $function({$val->getQuery()}) {$clone->alias} ";
             }
             
         } else if (is_string($value)) {

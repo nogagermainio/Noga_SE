@@ -1,7 +1,9 @@
 <?php declare(strict_types=1);
-namespace Src\QueryBuilder;
-use Src\Sql;
-class SubBuilder {
+namespace Src\QueryBuilder\Select\Sub;
+
+use Src\QueryBuilder\Select\Select;
+
+class Sub {
     protected string $sql = "";
     protected array $params = [];
 
@@ -10,12 +12,14 @@ class SubBuilder {
         $this->params = [];
     }
 
-    public function tosub(callable|Sql|string $rows, string $alias = ""):static {
-        if (is_string($rows)) {
+    public function tosub(callable|Select|string $rows, string $alias = ""):static {
+        if (\is_string($rows)) {
             $this->sql = "$rows AS $alias";
-        } else if(\is_callable($rows) || $rows instanceof Sql){
-            $sub = $rows instanceof Sql ? $rows : $rows(new Sql());
-            $this->sql .= "(". $sub->getSql() .") AS $alias";
+        } else if(\is_callable($rows) || $rows instanceof Select){
+
+            $sub = $rows instanceof Select ? $rows : $rows(new Select());
+            $this->sql .= "(". $sub->getQuery() .") AS $alias";
+
             $this->params = $sub->getParams();
 
         }

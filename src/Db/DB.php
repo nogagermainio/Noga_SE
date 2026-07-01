@@ -1,5 +1,6 @@
 <?php
 namespace Src\Db;
+use Generator;
 use PDO;
 use PDOException;
 use RuntimeException;
@@ -136,9 +137,9 @@ abstract class Db{
  * @param string $sql
  * @param array $params
  * @param int $fetchMode
- * @return \Generator
+ * @return Generator
  */
-public function stream(string $sql, array $params = [],int $fetchMode = PDO::FETCH_OBJ){
+public function stream(string $sql, array $params = [],int $fetchMode = PDO::FETCH_OBJ):Generator{
      $stmt = $this->execute($sql, $params);
        while ($row = $stmt->fetch($fetchMode)) {
         yield $row;

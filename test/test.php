@@ -3,37 +3,25 @@ namespace Test;
 
 use Src\CLI\Services\Render;
 use Src\Noga;
-use Src\QueryBuilder\Insert\Insert;
 
 class Test{
+
       public static function handle(){
-        $in = Insert::table('noga')
-        ->columns(
-          "id",
-          "noms",
-          "prenoms",
-          "tel",
-          "fonction"
-        );
+      $array = [];
+      $select = Noga::table("users")
+      ->select("id")
+      ->selectCase(Noga::cases()->when("id","12")->else("25")->as("c"))
+      ->innerJoin(Noga::j("noga","n")
+      ->on("n.id","users.id"))
+      ->unionAll(Noga::u()->from("membres","group"))
+      ->where(["n.id"=>25])
+      ->viewState();
 
-        $req1 = $in->values(
-          12,
-          "noga",
-          "germainio",
-          "0340488021"
-          )
-          ->values("agent")
-          ->debugSql();
-
-        $req2 = $in->driver('pgsql')->values(
-          13,
-          "exeth",
-          "Ephore",
-          "0380823939",
-          "agent"
-          )
-          ->debugSql();
-
-        Render::data(["req1"=>$req1,"req2"=>$req2])->json();
+    $in = Noga::update("users")
+          ->set(["noms"=>"noga","prenoms"=>"germainio"])
+          ->where(["id"=>12])
+          ->viewState();
+     
+        Render::data($select)->json();
     } 
 }

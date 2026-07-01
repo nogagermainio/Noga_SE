@@ -1,10 +1,10 @@
 <?php
-namespace Src\QueryBuilder;
+namespace Src\QueryBuilder\Select\Case;
 
 use InvalidArgumentException;
+use Src\Core\BindHashing;
 
-class CaseBuilder {
-
+class Cases {
     protected string $name = "";
     protected array $whens = [];        // [[condition, value, paramName]]
     protected string|null $else = null; // valeur de l'ELSE
@@ -12,26 +12,27 @@ class CaseBuilder {
     protected array $params = [];       // tableau final des binds
     protected int $counter = 0;
     protected int $caseCounter = 0;
-    protected string $key = "";    // pour générer des noms uniques
     protected array $caseFromArray = [];
 
-    public function __construct()
-    {
-        $this->key = bin2hex(random_bytes(4));
-    }
+
     /**
      * Ajoute une condition WHEN … THEN …
      * $condition = "col = :param" ou n'importe quelle condition valide SQL
      * $value = valeur à retourner si la condition est vraie
+     * @param string $condition
+     * @param string $then
+     * @param mixed $bindvalue
+     * @throws InvalidArgumentException
+     * @return Cases
      */
-    public function when(string $condition,string $then, ?string $bindvalue=""):static
+    public function when(string $condition,string $then, ?string $bindvalue=""):Cases
     {
         if (str_contains($condition, '?')) {
             throw new InvalidArgumentException("Bind '?' interdit — utilisez :name");
         }
         
         // générer un nom unique pour la valeur THEN
-        $paramThen = ":then_{$this->key}_{$then}_". (++$this->counter);
+        $paramThen = BindHashing::hash("then",$then). (++$this->counter);
         $this->whens[] = [$condition, $bindvalue, $paramThen,$then];
 
        
@@ -46,7 +47,7 @@ class CaseBuilder {
         return $this;
     }
 
-    public function matchCond(string $condition):string{
+    private function matchCond(string $condition):string{
         $name = "";
          // extraire les :params dans la condition et les stocker dans $this->params
          preg_match_all('/:([a-zA-Z_]\w*)/', $condition, $matches);
@@ -58,11 +59,13 @@ class CaseBuilder {
 
     /**
      * Définit la valeur ELSE
+     * @param mixed $value
+     * @return Cases
      */
-    public function else(mixed $value):CaseBuilder
+    public function else(mixed $value):Cases
     {
         $clone = clone $this;
-        $paramElse = ":else_{$clone->key}_{$value}_" . (++$clone->counter);
+        $paramElse = BindHashing::hash("else",$value). (++$clone->counter);
         $clone->else = $paramElse;
         $clone->params[$paramElse] = $value;
         return $clone;
@@ -70,15 +73,23 @@ class CaseBuilder {
 
     /**
      * Définit l'alias de la colonne
+     * @param string|null $alias
+     * @return Cases
      */
-    public function as(?string $alias = null):CaseBuilder
+    public function as(?string $alias = null):Cases
     {
         $clone = clone $this;
         $clone->alias = ($alias !== null) ? $alias : "case_".$clone->counter++."";
         return $clone;
     }
 
-public function selectCaseFormArray(array $array):CaseBuilder {
+/**
+ * Summary of selectCaseFormArray
+ * @param array{column:string,alias:string,else:string,case:array{cond:string,value:int|string,then:int|string}} $array
+ * @throws InvalidArgumentException
+ * @return Cases
+ */
+public function selectCaseFormArray(array $array):Cases {
     $clone = clone $this;
      
     foreach ($array as $block) {
@@ -89,13 +100,13 @@ public function selectCaseFormArray(array $array):CaseBuilder {
         $column = $block['column'] ?? "";
         $alias  = $block['alias'] ?? "";
         $else   = $block['else'] ?? null;
+
         $whens = [];
         foreach ($block['cases'] as $case) {
             $cond  = $case['cond']  ?? "";
             $value = $case['value'] ?? null;
             $then  = $case['then']  ?? "";
 
-            // Ajout direct dans le builder
             // $clone->when($cond, $value, $then);
             $whens[] = "WHEN $cond THEN '$then' ";
            $name = $clone->matchCond($cond);
@@ -109,12 +120,13 @@ public function selectCaseFormArray(array $array):CaseBuilder {
     return $clone;
 }
 
-
-
     /**
      * Retourne la colonne SQL et fusionne tous les params
+     * Summary of toColumn
+     * @param string $cols
+     * @return array<array|string>
      */
-    public function toColumn(?string $cols = ""):array
+    public function toColumn(string $cols = ""):array
     {
         $this->name = $cols;
 

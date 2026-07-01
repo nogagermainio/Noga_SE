@@ -1,10 +1,10 @@
 <?php
-namespace Src\QueryBuilder;
+namespace Src\QueryBuilder\Select\Join;
 use InvalidArgumentException;
-
+use Src\QueryBuilder\Select\Select;
 use Src\Sql;
 
-class JoinBuilder
+class Join
 {
     protected array $joins = [];
     protected string $table = "";
@@ -13,37 +13,37 @@ class JoinBuilder
     protected array $on = [];
     protected array $params = [];
     protected string $sql = ""; 
-    protected ?Sql $req = null;
+    protected ?Select $req = null;
 
     public function __construct()
     {
 
         $this->params = [];
-        $this->req = new Sql();
+        $this->req = new Select();
     }
 
-    public function type(string $type):JoinBuilder{
+    public function type(string $type):Join{
         $clone = clone $this;
         $clone->type = \strtoupper($type);
         return $clone;
     }
     /**
      * Summary of table
-     * @param callable|Sql|string $table
-     * @return JoinBuilder
+     * @param callable|Select|string $table
+     * @return Join
      */
-    public function table(string|Sql|callable $table):JoinBuilder{
+    public function table(string|Select|callable $table):Join{
         $clone = clone $this;
-        if(is_string($table)){
+        if(\is_string($table)){
               $clone->table = $table;
 
-        }else if(\is_callable($table) || $table instanceof Sql){
+        }else if(\is_callable($table) || $table instanceof Select){
 
-          $sub = $table instanceof Sql ? $table : $table($clone->req);
-           if(!$sub instanceof Sql) 
+          $sub = $table instanceof Select ? $table : $table($clone->req);
+           if(!$sub instanceof Select) 
             throw new InvalidArgumentException("Error must be return Sql instance");
 
-          $clone->table = "(".$sub->getSql().")";
+          $clone->table = "(".$sub->getQuery().")";
 
           $clone->params = \array_merge($clone->params,$sub->getParams() ?? []);
         }
@@ -52,20 +52,20 @@ class JoinBuilder
        
     }
 
-    public function as(string $alias):JoinBuilder{
+    public function as(string $alias):Join{
         $clone = clone $this;
         $clone->as = $alias;
         return $clone;
     }
 
-    public function on(string $cols1,string $cols2,string $comparatif = "="):JoinBuilder{
+    public function on(string $cols1,string $cols2,string $comparatif = "="):Join{
         $clone = clone $this;
         $clone->on[] = "{$cols1} {$comparatif} {$cols2}";
 
         return $clone;
     }
 
-    public function andOn(string $cols1,string $cols2,string $comparatif = "="):JoinBuilder{
+    public function andOn(string $cols1,string $cols2,string $comparatif = "="):Join{
          $clone = clone $this;
         $clone->on[] = "{$cols1} {$comparatif} {$cols2}";
 
